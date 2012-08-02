@@ -38,12 +38,12 @@ disp(u2btildGrid)
 % if ~strcmpi(err.identifier,'MATLAB:UndefinedFunction')
 % 
 
-  %if(matlabpool('size') > 0)
-   %  matlabpool close
- % end
-%if ~(strcmp(computer,'PCWIN'))
-%matlabpool open local;
-%end
+  if(matlabpool('size') > 0)
+     matlabpool close
+ end
+if ~(strcmp(computer,'PCWIN'))
+matlabpool open local;
+end
 
 
 %% Computing the  V^T and policies
@@ -54,8 +54,8 @@ disp(u2btildGrid)
 % by solving for the two roots of this equation and using the one that
 % supports the highest utility
 tic
-gTrue=Para.g;
-Para.g=mean(gTrue)*ones(2,1);
+%gTrue=Para.g;
+%Para.g=mean(gTrue)*ones(2,1);
 for s_=1:sSize
     n=1;
    if s_==1
@@ -98,7 +98,7 @@ V0(s_,n)=(alpha_1*uBGP(c1_,l1_,psi)+alpha_2*uBGP(c2_,l2_,psi))/(1-beta);
        xInit_0(s_,:)=xInit_0(s_-1,:);
    end
 end
-Para.g=gTrue;
+%Para.g=gTrue;
 x_state=vertcat([squeeze(x_state_(1,:,:)) ones(length(x_state_),1)] ,[squeeze(x_state_(1,:,:)) 2*ones(length(x_state_),1)]);
 scatter(x_state(:,1),x_state(:,2))
 c=c0;
@@ -142,9 +142,9 @@ for iter=2:301
     IndxUnSolved=[];
     ExitFlag=[];
     PolicyRulesStoreOld=PolicyRulesStore;
-      %parfor ctr=1:GridSize/2
+      parfor ctr=1:GridSize/2
     
-   for ctr=1:GridSize/2
+   %for ctr=1:GridSize/2
         
         u2btild=u2btild_slice(ctr) ;
         R=R_slice(ctr) ;
