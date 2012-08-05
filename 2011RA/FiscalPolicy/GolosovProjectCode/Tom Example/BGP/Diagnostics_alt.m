@@ -7,7 +7,7 @@ clear numsolved
 % solve the FOC at the points selected in the state space for the final set of coeffecients. The red points
 % denote failure.   
 startIter=2;
-endIter=200;
+endIter=2;
 for iter=startIter:endIter
     
     
@@ -15,6 +15,7 @@ for iter=startIter:endIter
     numsolved(iter)=length(IndxSolved);
 %[Tau0,Rprime0,u2btildprime0]=SolveTime0(c,V,1,Para)
 end
+plotpath=[];
     xSolved=x_state(IndxSolved,:);
 xUnSolved=x_state(IndxUnSolved,:);
 
@@ -191,7 +192,7 @@ Rprime0=c20^(-1)/c10^(-1);
 
 
 % RUN SIMULATION
-NumSim=1500;
+NumSim=110;
 u2btildHist=zeros(NumSim,1);
 btildHist=zeros(NumSim,1);
 RHist=zeros(NumSim,1);
@@ -504,3 +505,79 @@ end
   print(figRprime,'-dpng',[plotpath 'RPrime.png'])
 % 
 % 
+
+%% Policy Rules entire state space
+% Caption : fig:PolicyRules - This plot depicts the $\tilde{b}'_2$ as a function of $\tilde{b}_2$ 
+ figu2BtildePrime =figure('Name','x');
+ figBtildePrime =figure('Name','btild');
+ figRprime=figure('Name','R');
+ 
+ u2bdiffFineGrid=linspace(min(Para.u2bdiffGrid),max(Para.u2bdiffGrid),35);
+ RList=linspace(min(Para.RGrid),max(Para.RGrid),4);
+ s_=1;
+for Rctr=1:4 
+ for u2btildctr=1:length(u2bdiffFineGrid)
+    R=RList(Rctr);
+     u2btild=u2bdiffFineGrid(u2btildctr);
+   [PolicyRulesInit]=GetInitialApproxPolicy([u2btild R s_] ,x_state,PolicyRulesStore);
+    [PolicyRules, V_new,exitflag]=CheckGradNAG(u2btild,R,s_,c,V,PolicyRulesInit,Para);
+    if exitflag==1
+        IndxPrint(u2btildctr)=1;
+    else
+        IndxPrint(u2btildctr)=0;
+    end
+    
+% 
+  u2BtildePrime(u2btildctr,:)=PolicyRules(end-1:end);
+  BtildePrime(u2btildctr,:)=PolicyRules(end-5:end-4);
+  Rprime(u2btildctr,:)=PolicyRules(end-3:end-2);
+ end
+
+%  cons(u1btildctr) = PolicyRules(1);
+% end
+
+figure(figBtildePrime)
+ subplot(2,2,Rctr)
+ plot(u2bdiffFineGrid(logical(IndxPrint)), BtildePrime(logical(IndxPrint),1),'k')
+ hold on
+ plot(u2bdiffFineGrid(logical(IndxPrint)), BtildePrime(logical(IndxPrint),2),':k')
+ hold on
+ if Rctr==1
+     legend('g_l','g_h')
+ end
+ %plot(u2bdiffFineGrid, 0*u2bdiffFineGrid,':k');
+ hold on
+ %plot(u2bdiffFineGrid,repmat([u2btildLL u2btildUL],length(u2bdiffFineGrid),1)-[u2bdiffFineGrid' u2bdiffFineGrid'] ,':r')
+% 
+ xlabel('$x$','Interpreter','Latex')
+ ylabel('$\tilde{b}_2$','Interpreter','Latex')
+ title(['$R=$' num2str(RList(Rctr))])
+
+ figure(figu2BtildePrime)
+ subplot(2,2,Rctr)
+ plot(u2bdiffFineGrid(logical(IndxPrint)), u2BtildePrime(logical(IndxPrint),1)- u2bdiffFineGrid(logical(IndxPrint))','k')
+ hold on
+ plot(u2bdiffFineGrid(logical(IndxPrint)), u2BtildePrime(logical(IndxPrint),2)-u2bdiffFineGrid(logical(IndxPrint))',':k')
+ hold on
+ if Rctr==1
+     legend('g_l','g_h')
+ end
+ %plot(u2bdiffFineGrid, 0*u2bdiffFineGrid,':k');
+ hold on
+ %plot(u2bdiffFineGrid,repmat([u2btildLL u2btildUL],length(u2bdiffFineGrid),1)-[u2bdiffFineGrid' u2bdiffFineGrid'] ,':r')
+% 
+ xlabel('$x$','Interpreter','Latex')
+ ylabel('$x*-x$','Interpreter','Latex')
+ title(['$R=$' num2str(RList(Rctr))])
+
+ 
+% 
+ figure(figRprime)
+ subplot(2,2,Rctr)
+ plot(u2bdiffFineGrid(logical(IndxPrint)), Rprime(logical(IndxPrint),1),'k');
+ hold on
+ plot(u2bdiffFineGrid(logical(IndxPrint)), Rprime(logical(IndxPrint),2),':k');
+ xlabel('$x$','Interpreter','Latex')
+ ylabel('$R^{*}$','Interpreter','Latex')
+  title(['$R=$' num2str(RList(Rctr))])
+end

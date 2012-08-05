@@ -22,11 +22,34 @@ global V Vcoef R u2btild Par s_
      c2_1=x(3);
     %compute components from unconstrained guess
     [c2_2 grad_c2_2] = computeC2_2(c1_1,c1_2,c2_1,R,s_,P,sigma);
+%      h=.0001;
+%  Der(1)=(computeC2_2(c1_1+h,c1_2,c2_1,R,s_,P,sigma)-computeC2_2(c1_1-h,c1_2,c2_1,R,s_,P,sigma))/(2*h)
+%  Der(2)=(computeC2_2(c1_1,c1_2+h,c2_1,R,s_,P,sigma)-computeC2_2(c1_1,c1_2-h,c2_1,R,s_,P,sigma))/(2*h)
+%  Der(3)=(computeC2_2(c1_1,c1_2,c2_1+h,R,s_,P,sigma)-computeC2_2(c1_1,c1_2,c2_1-h,R,s_,P,sigma))/(2*h)
+
     [l1 l1grad l2 l2grad] = computeL(c1_1,c1_2,c2_1,c2_2,grad_c2_2,...
     theta_1,theta_2,g,n1,n2);
+% computeLCheck = @(xx) computeL(xx(1),xx(2),xx(3),computeC2_2(xx(1),xx(2),xx(3),R,s_,P,sigma),grad_c2_2,theta_1,theta_2,g,n1,n2);
+% computeLCheck([c1_1,c1_2 ,c2_1])
+% Der(1,:)=(computeLCheck([c1_1+h,c1_2 ,c2_1])-computeLCheck([c1_1-h,c1_2 ,c2_1]))/(2*h)
+% Der(2,:)=(computeLCheck([c1_1,c1_2+h ,c2_1])-computeLCheck([c1_1,c1_2-h ,c2_1]))/(2*h)
+% Der(3,:)=(computeLCheck([c1_1,c1_2 ,c2_1+h])-computeLCheck([c1_1,c1_2 ,c2_1-h]))/(2*h)
     [btildprime grad_btildprime] = computeBtildeprime(c1_1,c1_2,c2_1,c2_2,grad_c2_2,l1,l2,l1grad,l2grad,...
    u2btild,s_,psi,beta,P);
-    
+%  computeL1Check = @(xx) computeL1(xx(1),xx(2),xx(3),computeC2_2(xx(1),xx(2),xx(3),R,s_,P,sigma),grad_c2_2,theta_1,theta_2,g,n1,n2);
+%   computeL1Check([c1_1,c1_2 ,c2_1])
+%  computeL2Check = @(xx) computeL2(xx(1),xx(2),xx(3),computeC2_2(xx(1),xx(2),xx(3),R,s_,P,sigma),grad_c2_2,theta_1,theta_2,g,n1,n2);
+%   computeL2Check([c1_1,c1_2 ,c2_1])
+%  ComputeBtildeprimeCheck  =  @(xx) computeBtildeprime(xx(1),xx(2),xx(3),computeC2_2(xx(1),xx(2),xx(3),R,s_,P,sigma),grad_c2_2,computeL1Check([xx(1),xx(2),xx(3)]),computeL2Check([xx(1),xx(2),xx(3)]),l1grad,l2grad,u2btild,s_,psi,beta,P)
+%  
+%  ComputeBtildeprimeCheck([c1_1,c1_2 ,c2_1])
+%  Der(1,:)=(ComputeBtildeprimeCheck([c1_1+h,c1_2 ,c2_1])-ComputeBtildeprimeCheck([c1_1-h,c1_2 ,c2_1]))/(2*h)
+% Der(2,:)=(ComputeBtildeprimeCheck([c1_1,c1_2+h ,c2_1])-ComputeBtildeprimeCheck([c1_1,c1_2-h ,c2_1]))/(2*h)
+%  Der(3,:)=(ComputeBtildeprimeCheck([c1_1,c1_2 ,c2_1+h])-ComputeBtildeprimeCheck([c1_1,c1_2 ,c2_1-h]))/(2*h)
+
+ 
+ 
+ 
     %compute objective
     grad1 = zeros(3,1);
     X = [psi*c2_1^(-1)*btildprime(1),c2_1^(-1)/c1_1^(-1)];%state next period
@@ -70,7 +93,7 @@ global V Vcoef R u2btild Par s_
    
     
     end
-    
+     
 
 end
 
@@ -87,6 +110,9 @@ function [ c2_2 grad ] = computeC2_2(c1_1,c1_2,c2_1,R,s_,P,sigma)
     grad(2) = c1_2^(-sigma-1)*frac^(-1/sigma-1)*R; % <ok - Anmol>
     grad(3) = -c2_1^(-sigma-1)*frac^(-1/sigma-1)*P(s_,1)/P(s_,2); % <ok - Anmol>
 end
+% CHECK GRADIENT
+
+
 
 function [l1 l1grad l2 l2grad] = computeL(c1_1,c1_2,c2_1,c2_2,grad_c2_2,...
     theta_1,theta_2,g,n1,n2)
@@ -172,4 +198,98 @@ function [btildprime grad_btildprime] = computeBtildeprime(c1_1,c1_2,c2_1,c2_2,g
 
     grad_btildprime(:,2) = grad_btildprime(:,2) + d_c2_2*grad_c2_2+d_l1_2*l1grad(:,2)+d_l2_2*l2grad(:,2);
 
+end
+
+
+function [l1] = computeL1(c1_1,c1_2,c2_1,c2_2,grad_c2_2,...
+    theta_1,theta_2,g,n1,n2)
+
+    %Compute l1 form formula
+    l1_1den = n1*theta_1+n2*c2_1*theta_1/c1_1; % < ok - Anmol>
+    l1_1num = (n1*c1_1+n2*c2_1+g(1) + n2*(c2_1*theta_1-c1_1*theta_2)/c1_1);  % < ok - Anmol>
+    l1(1) = l1_1num/l1_1den;  % < ok - Anmol>
+    l1_2den = n1*theta_1+n2*c2_2*theta_1/c1_2; % <ok - Anmol>
+    l1_2num = (n1*c1_2+n2*c2_2+g(2) + n2*(c2_2*theta_1-c1_2*theta_2)/c1_2); % <ok - Anmol>
+    l1(2) = l1_2num/l1_2den; % <ok - Anmol>
+    
+    %compute gradients of l1(1) for c1_1,c1_2,c2_1
+    l1grad(1,1) = (l1_1den*(n1-n2*theta_1*c2_1/c1_1^2)+l1_1num*n2*c2_1*theta_1/c1_1^2)/l1_1den^2; %<ok - Anmol>
+    l1grad(2,1) = 0;  % <ok - Anmol>
+    l1grad(3,1) = (l1_1den*(n2+n2*theta_1/c1_1)-l1_1num*n2*theta_1/c1_1)/l1_1den^2;  % <ok - Anmol>
+    
+    %compute gradients of l1(1) for c1_1,c1_2,c2_1
+    l1grad(1,2) = 0; % <ok - Anmol>
+    l1grad(2,2) = (l1_2den*(n1-n2*theta_1*c2_2/c1_2^2)+l1_2num*n2*c2_2*theta_1/c1_2^2)/l1_2den^2; % <ok - Anmol>
+    l1grad(3,2) = 0; % <ok - Anmol>
+    %use chain rule for c2_2
+    d_c2_2 = (l1_2den*(n2+n2*theta_1/c1_2)-l1_2num*n2*theta_1/c1_2)/l1_2den^2; % <ok - Anmol>
+    l1grad(:,2) = l1grad(:,2)+d_c2_2*grad_c2_2; % <ok - Anmol>
+    
+    %compute l2 from formula
+    l2_1den = n2*theta_2+n1*c1_1*theta_2/c2_1; % <ok - Anmol>
+    l2_1num = n1*c1_1+n2*c2_1+g(1)+n1*(c1_1*theta_2-c2_1*theta_1)/c2_1;
+    l2(1) = l2_1num/l2_1den; % <ok - Anmol>
+    l2_2den = n2*theta_2+n1*c1_2*theta_2/c2_2; % <ok - Anmol>
+    l2_2num = n1*c1_2+n2*c2_2+g(2)+n1*(c1_2*theta_2-c2_2*theta_1)/c2_2; % <ok - Anmol>
+    l2(2) = l2_2num/l2_2den; % <ok - Anmol>
+    
+    %compute gradients of l2(1) for c1_1,c1_2,c2_1
+    l2grad(1,1) = (l2_1den*(n1+n1*theta_2/c2_1)-l2_1num*n1*theta_2/c2_1)/l2_1den^2;  % <ok - Anmol>
+    l2grad(2,1) = 0; % <ok - Anmol>
+    l2grad(3,1) = (l2_1den*(n2-n1*c1_1*theta_2/c2_1^2)+l2_1num*n1*c1_1*theta_2/c2_1^2)/l2_1den^2; % <ok - Anmol>
+    
+    %compute gradients of l2(2) for c1_1,c1_2,c2_1
+    l2grad(1,2) = 0; % <ok - Anmol>
+    l2grad(2,2) = (l2_2den*(n1+n1*theta_2/c2_2)-l2_2num*n1*theta_2/c2_2)/l2_2den^2; % <ok - Anmol>
+    l2grad(3,2) = 0; % <ok - Anmol>
+    %use chain rule to get the effect of c2_2
+    d_c2_2 = (l2_2den*(n2-n1*c1_2*theta_2/c2_2^2)+l2_2num*n1*c1_2*theta_2/c2_2^2)/l2_2den^2; % <ok - Anmol>
+    l2grad(:,2) = l2grad(:,2)+d_c2_2*grad_c2_2;
+    
+end
+function [l2 ] = computeL2(c1_1,c1_2,c2_1,c2_2,grad_c2_2,...
+    theta_1,theta_2,g,n1,n2)
+
+    %Compute l1 form formula
+    l1_1den = n1*theta_1+n2*c2_1*theta_1/c1_1; % < ok - Anmol>
+    l1_1num = (n1*c1_1+n2*c2_1+g(1) + n2*(c2_1*theta_1-c1_1*theta_2)/c1_1);  % < ok - Anmol>
+    l1(1) = l1_1num/l1_1den;  % < ok - Anmol>
+    l1_2den = n1*theta_1+n2*c2_2*theta_1/c1_2; % <ok - Anmol>
+    l1_2num = (n1*c1_2+n2*c2_2+g(2) + n2*(c2_2*theta_1-c1_2*theta_2)/c1_2); % <ok - Anmol>
+    l1(2) = l1_2num/l1_2den; % <ok - Anmol>
+    
+    %compute gradients of l1(1) for c1_1,c1_2,c2_1
+    l1grad(1,1) = (l1_1den*(n1-n2*theta_1*c2_1/c1_1^2)+l1_1num*n2*c2_1*theta_1/c1_1^2)/l1_1den^2; %<ok - Anmol>
+    l1grad(2,1) = 0;  % <ok - Anmol>
+    l1grad(3,1) = (l1_1den*(n2+n2*theta_1/c1_1)-l1_1num*n2*theta_1/c1_1)/l1_1den^2;  % <ok - Anmol>
+    
+    %compute gradients of l1(1) for c1_1,c1_2,c2_1
+    l1grad(1,2) = 0; % <ok - Anmol>
+    l1grad(2,2) = (l1_2den*(n1-n2*theta_1*c2_2/c1_2^2)+l1_2num*n2*c2_2*theta_1/c1_2^2)/l1_2den^2; % <ok - Anmol>
+    l1grad(3,2) = 0; % <ok - Anmol>
+    %use chain rule for c2_2
+    d_c2_2 = (l1_2den*(n2+n2*theta_1/c1_2)-l1_2num*n2*theta_1/c1_2)/l1_2den^2; % <ok - Anmol>
+    l1grad(:,2) = l1grad(:,2)+d_c2_2*grad_c2_2; % <ok - Anmol>
+    
+    %compute l2 from formula
+    l2_1den = n2*theta_2+n1*c1_1*theta_2/c2_1; % <ok - Anmol>
+    l2_1num = n1*c1_1+n2*c2_1+g(1)+n1*(c1_1*theta_2-c2_1*theta_1)/c2_1;
+    l2(1) = l2_1num/l2_1den; % <ok - Anmol>
+    l2_2den = n2*theta_2+n1*c1_2*theta_2/c2_2; % <ok - Anmol>
+    l2_2num = n1*c1_2+n2*c2_2+g(2)+n1*(c1_2*theta_2-c2_2*theta_1)/c2_2; % <ok - Anmol>
+    l2(2) = l2_2num/l2_2den; % <ok - Anmol>
+    
+    %compute gradients of l2(1) for c1_1,c1_2,c2_1
+    l2grad(1,1) = (l2_1den*(n1+n1*theta_2/c2_1)-l2_1num*n1*theta_2/c2_1)/l2_1den^2;  % <ok - Anmol>
+    l2grad(2,1) = 0; % <ok - Anmol>
+    l2grad(3,1) = (l2_1den*(n2-n1*c1_1*theta_2/c2_1^2)+l2_1num*n1*c1_1*theta_2/c2_1^2)/l2_1den^2; % <ok - Anmol>
+    
+    %compute gradients of l2(2) for c1_1,c1_2,c2_1
+    l2grad(1,2) = 0; % <ok - Anmol>
+    l2grad(2,2) = (l2_2den*(n1+n1*theta_2/c2_2)-l2_2num*n1*theta_2/c2_2)/l2_2den^2; % <ok - Anmol>
+    l2grad(3,2) = 0; % <ok - Anmol>
+    %use chain rule to get the effect of c2_2
+    d_c2_2 = (l2_2den*(n2-n1*c1_2*theta_2/c2_2^2)+l2_2num*n1*c1_2*theta_2/c2_2^2)/l2_2den^2; % <ok - Anmol>
+    l2grad(:,2) = l2grad(:,2)+d_c2_2*grad_c2_2;
+    
 end
