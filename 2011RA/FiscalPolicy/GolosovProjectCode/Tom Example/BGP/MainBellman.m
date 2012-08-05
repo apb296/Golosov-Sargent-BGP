@@ -38,12 +38,12 @@ disp(u2btildGrid)
 % if ~strcmpi(err.identifier,'MATLAB:UndefinedFunction')
 % 
 
-  if(matlabpool('size') > 0)
-     matlabpool close
- end
-if ~(strcmp(computer,'PCWIN'))
-matlabpool open local;
-end
+  %if(matlabpool('size') > 0)
+  %   matlabpool close
+ %end
+%if ~(strcmp(computer,'PCWIN'))
+%matlabpool open local;
+%end
 
 
 %% Computing the  V^T and policies
@@ -54,15 +54,15 @@ end
 % by solving for the two roots of this equation and using the one that
 % supports the highest utility
 tic
-%gTrue=Para.g;
-%Para.g=mean(gTrue)*ones(2,1);
+gTrue=Para.g;
+Para.g=mean(gTrue)*ones(2,1);
 for s_=1:sSize
     n=1;
    if s_==1
     
     
         for u2btildctr=1:u2btildGridSize
-            
+ tic           
     for Rctr=1:RGridSize        
         
             u2btild_=u2btildGrid(u2btildctr);
@@ -90,6 +90,7 @@ V0(s_,n)=(alpha_1*uBGP(c1_,l1_,psi)+alpha_2*uBGP(c2_,l2_,psi))/(1-beta);
             n=n+1;
             %end
     end
+    toc
     end
     c0(s_,:)=funfitxy(V(s_),squeeze(x_state_(s_,logical(ExitFlagT==1),:)),squeeze(V0(s_,logical(ExitFlagT==1)))' );
    else
@@ -98,7 +99,7 @@ V0(s_,n)=(alpha_1*uBGP(c1_,l1_,psi)+alpha_2*uBGP(c2_,l2_,psi))/(1-beta);
        xInit_0(s_,:)=xInit_0(s_-1,:);
    end
 end
-%Para.g=gTrue;
+Para.g=gTrue;
 x_state=vertcat([squeeze(x_state_(1,:,:)) ones(length(x_state_),1)] ,[squeeze(x_state_(1,:,:)) 2*ones(length(x_state_),1)]);
 scatter(x_state(:,1),x_state(:,2))
 c=c0;
@@ -142,17 +143,20 @@ for iter=2:301
     IndxUnSolved=[];
     ExitFlag=[];
     PolicyRulesStoreOld=PolicyRulesStore;
-      parfor ctr=1:GridSize/2
+      %parfor ctr=1:GridSize/2
     
-   %for ctr=1:GridSize/2
+   for ctr=1:GridSize/2
         
         u2btild=u2btild_slice(ctr) ;
         R=R_slice(ctr) ;
         s_=s_slice(ctr);
        %[xInit]=GetInitialApproxPolicy([u2btild R s_],x_state,PolicyRulesStoreOld);
         xInit=PolicyRulesStore(ctr,:);
+        
        % [PolicyRules, V_new,exitflag]=CheckGradNAG2(u2btild,R,s_,c,V,xInit',Para);
         [PolicyRules, V_new,exitflag]=CheckGradNAG(u2btild,R,s_,c,V,xInit',Para);
+       
+        %DiagonsticCheckConstraints(u2btild,R,s_,c,V,xInit',Para);
         ExitFlag(ctr)=exitflag;
         VNew(ctr)=V_new;
         PolicyRulesStore(ctr,:)=PolicyRules;
@@ -208,16 +212,15 @@ for iter=2:301
     
     %PlotFlagPoints
     %[Tau0,Rprime0,u2btildprime0]=SolveTime0(c,V,1,Para)
-
+    
     save([ datapath 'c' num2str(iter)] , 'c','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V');
-      end
+    btild_1=Para.btild_1;
 
-  %Diagnostics
   disp('Computed V...Now solving V0(btild_1) where btild_1 is')
 disp(btild_1)
 % c1 and c2 solve 
  options=optimset('Display','off');
-[x,fval,exitflagv0,~,grad] = fminunc(@(x)  getValue0(x, btild_1,1,Para,c,V),[c1 c2],options);
+[x,fval,exitflagv0,~,grad] = fminunc(@(x)  getValue0(x, btild_1,1,Para,c,V),[ .5 .5*mean(Para.RGrid)^(-1)],options);
 if ~(exitflagv0==1)
     disp('Optimization failed for V0 once ..trying with fmincon')
 opts = optimset('Algorithm', 'interior-point', 'Display','off', ...
@@ -226,15 +229,21 @@ opts = optimset('Algorithm', 'interior-point', 'Display','off', ...
     'TolX', Para.ctol/10, 'TolFun', Para.ctol, 'TolCon', Para.ctol,'MaxTime',200);
 lb=[0.001 0.001];
 ub=[10 10];
-[x,fval,exitflagv0,output,lambda]  =fmincon(@(x) getValue0(x, btild_1,Para,c,V1),[c1 c2],[],[],[],[],lb,ub,[],opts);
+%[x,fval,exitflagv0,output,lambda]  =fmincon(@(x) getValue0(x, btild_1,1,Para,c,V),[ x ],[],[],[],[],lb,ub,[],opts);
+[x,fval,exitflagv0,output,lambda]  =fmincon(@(x) getValue0(x, btild_1,1,Para,c,V),[ 1 mean(Para.RGrid)^(-1)],[],[],[],[],lb,ub,[],opts);
 end
+c10 = x(1);
+c20 = x(2);
+R0=c10/c20;
+TotalResources=(c10*n1+c20*n2+g(1));
+FF=R0*theta_2/theta_1;
+DenL2=n1*theta_1*FF+theta_2*n2;
+l20=(TotalResources-n1*theta_1+n1*theta_1*FF)/(DenL2);
+l10= 1-FF*(1-l20);
+BracketTerm=l20/(1-l20)-(l10/(1-l10))*R0;
+u2btildprime0=(((1-psi)/(psi))*BracketTerm+btild_1/(beta*psi)+R0-1)*psi;
+btildprime0=u2btildprime0/(c20^-1*psi) ;
+Rprime0=c20^(-1)/c10^(-1)
+      end
 
-%[x_state(1:GridSize/2,1:2) PolicyRulesStore(1:GridSize/2,end-1:end)]
-%[PolicyRulesStore(1:ctr,:)]
-u2btild =-2;
-    R =2.5;
-    s_=  1;
-
-    [PolicyRulesInit]=GetInitialApproxPolicy([u2btild R s_],x_state,PolicyRulesStore)
-[PolicyRules, V_new,exitflag]=CheckGradNAG(u2btild,R,s_,c,V,PolicyRulesInit,Para);
-           
+ 

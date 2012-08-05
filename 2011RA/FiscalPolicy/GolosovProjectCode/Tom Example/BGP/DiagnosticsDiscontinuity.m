@@ -7,7 +7,7 @@ clear numsolved
 % solve the FOC at the points selected in the state space for the final set of coeffecients. The red points
 % denote failure.   
 startIter=2;
-endIter=15;
+endIter=5;
 for iter=startIter:endIter
     
     
@@ -175,7 +175,7 @@ end
 clc
 close all
 x_state(1:length(Para.RGrid):Para.GridSize/2,1);
-R=min(Para.RGrid);
+R=2.5;
 u2bdiffFineGrid=linspace(1.8,1.9,5)
 PolPlot=[];
 for u2btildctr=1:length(u2bdiffFineGrid)
@@ -184,7 +184,7 @@ s_=1;
   [PolicyRulesInit]=GetInitialApproxPolicy([u2btild R s_] ,x_state,PolicyRulesStore);
     [PolicyRules, V_new,exitflag]=CheckGradNAG(u2btild,R,s_,c,V,PolicyRulesInit,Para);
     PolPlot(u2btildctr,:)=PolicyRules(:,1);
-     DiagonsticCheckConstraints(u2btild,R,s_,c,V,PolicyRulesInit*.96,Para)
+   %  DiagonsticCheckConstraints(u2btild,R,s_,c,V,PolicyRulesInit*.96,Para)
 end
 figure()
 plot(u2bdiffFineGrid,PolPlot)
