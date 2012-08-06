@@ -15,7 +15,7 @@ scatter(Rbar,u2btildGrid)
 
 % R=u_2/u_1 = c1/c2
 RMin=max(Rbar)*1.05;
-RMax=max(Rbar)*1.9;
+RMax=max(Rbar)*1.75;
 RGrid=linspace(RMin,RMax,RGridSize);
 
 Para.RGrid=RGrid;
