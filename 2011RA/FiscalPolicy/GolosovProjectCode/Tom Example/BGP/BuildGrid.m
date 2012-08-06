@@ -1,7 +1,11 @@
-u2btildMin=-(theta_1-theta_2)/(1-beta)*(1/(n1*theta_1+n2*theta_2-g(1)));
-u2btildMin=u2btildMin/3.2;
+
+
+%u2btildMin=-(theta_1-theta_2)/(1-beta)*(1/(n1*theta_1+n2*theta_2-g(1)));
+u2btildMin=-(beta/(1-beta))*(max(g)/(1-max(g)));
 u2btildMax=-u2btildMin;
 u2btildGrid=linspace(u2btildMin,u2btildMax,u2btildGridSize);
+%u2btildGrid=horzcat(u2btildGrid,linspace(u2btildMax/2*1.02,u2btildMax,u2btildGridSize/2));
+
 Para.u2bdiffGrid=u2btildGrid;
 Para.u2btildLL=u2btildMin;
 Para.u2btildUL=u2btildMax;

@@ -62,7 +62,6 @@ for s_=1:sSize
     
     
         for u2btildctr=1:u2btildGridSize
- tic           
     for Rctr=1:RGridSize        
         
             u2btild_=u2btildGrid(u2btildctr);
@@ -90,7 +89,6 @@ V0(s_,n)=(alpha_1*uBGP(c1_,l1_,psi)+alpha_2*uBGP(c2_,l2_,psi))/(1-beta);
             n=n+1;
             %end
     end
-    toc
     end
     c0(s_,:)=funfitxy(V(s_),squeeze(x_state_(s_,logical(ExitFlagT==1),:)),squeeze(V0(s_,logical(ExitFlagT==1)))' );
    else
@@ -153,10 +151,8 @@ for iter=2:301
        %[xInit]=GetInitialApproxPolicy([u2btild R s_],x_state,PolicyRulesStoreOld);
         xInit=PolicyRulesStore(ctr,:);
         
-       % [PolicyRules, V_new,exitflag]=CheckGradNAG2(u2btild,R,s_,c,V,xInit',Para);
-        [PolicyRules, V_new,exitflag]=CheckGradNAG(u2btild,R,s_,c,V,xInit',Para);
        
-        %DiagonsticCheckConstraints(u2btild,R,s_,c,V,xInit',Para);
+        [PolicyRules, V_new,exitflag]=CheckGradNAG(u2btild,R,s_,c,V,xInit',Para);
         ExitFlag(ctr)=exitflag;
         VNew(ctr)=V_new;
         PolicyRulesStore(ctr,:)=PolicyRules;
@@ -243,7 +239,7 @@ l10= 1-FF*(1-l20);
 BracketTerm=l20/(1-l20)-(l10/(1-l10))*R0;
 u2btildprime0=(((1-psi)/(psi))*BracketTerm+btild_1/(beta*psi)+R0-1)*psi;
 btildprime0=u2btildprime0/(c20^-1*psi) ;
-Rprime0=c20^(-1)/c10^(-1)
+Rprime0=c20^(-1)/c10^(-1);
       end
 
  

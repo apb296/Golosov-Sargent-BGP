@@ -7,7 +7,7 @@ clear numsolved
 % solve the FOC at the points selected in the state space for the final set of coeffecients. The red points
 % denote failure.   
 startIter=2;
-endIter=25;
+endIter=;
 for iter=startIter:endIter
     
     
