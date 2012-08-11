@@ -1,3 +1,5 @@
+function MainBellman(Para,StartIter)
+close all;
 % This is the main file for computing the minimally stochastic case for BGP
 % preferences
 %% NOTATION
@@ -6,12 +8,12 @@
 % - -- - - - - 
 clc
 close all
-clear all
 %%
 % This script sets up the para structure and records a tex table with the
 % parameters
-
+if nargin==0
 SetParaStruc
+end
 
 %% Compute the undistorted FB
     s_=1;
@@ -19,7 +21,7 @@ SetParaStruc
     [c1FB c2FB l1FB l2FB yFB g_yFB_l Agent1WageShareFB_l]=getFB(Para,1)
     rowLabels = {'$\frac{g}{y}$','$\frac{\theta_1 l_1}{\theta_2 l_2}$'};
     columnLabels = {'$g_l$','$g_h$'};
-    matrix2latex([g_yFB_l g_yFB_h  ; Agent1WageShareFB_l Agent1WageShareFB_h], [texpath 'Moments.tex'] , 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny');
+    matrix2latex([g_yFB_l g_yFB_h  ; Agent1WageShareFB_l Agent1WageShareFB_h], [Para.texpath 'Moments.tex'] , 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny');
 
 btild_1=0;
 Para.btild_1=btild_1;
@@ -56,13 +58,13 @@ disp(u2btildGrid)
 tic
 gTrue=Para.g;
 Para.g=mean(gTrue)*ones(2,1);
-for s_=1:sSize
+for s_=1:Para.sSize
     n=1;
    if s_==1
     
     
-        for u2btildctr=1:u2btildGridSize
-    for Rctr=1:RGridSize        
+        for u2btildctr=1:Para.u2btildGridSize
+    for Rctr=1:Para.RGridSize        
         
             u2btild_=u2btildGrid(u2btildctr);
             R_=RGrid(Rctr);
@@ -78,14 +80,14 @@ for s_=1:sSize
             end
             % compute c2 
             c2_=R_^(-1)*c1_;
-              TotalResources=(c1_*n1+c2_*n2+g(s_));
-FF=R_*theta_2/theta_1;
-DenL2=n1*theta_1*FF+theta_2*n2;
-l2_=(TotalResources-n1*theta_1+n1*theta_1*FF)/(DenL2);
+              TotalResources=(c1_*Para.n1+c2_*Para.n2+Para.g(s_));
+FF=R_*Para.theta_2/Para.theta_1;
+DenL2=Para.n1*Para.theta_1*FF+Para.theta_2*Para.n2;
+l2_=(TotalResources-Para.n1*Para.theta_1+Para.n1*Para.theta_1*FF)/(DenL2);
 l1_= 1-FF*(1-l2_);
 u2btildPrime_=u2btild_;
-V0(s_,n)=(alpha_1*uBGP(c1_,l1_,psi)+alpha_2*uBGP(c2_,l2_,psi))/(1-beta);
-            xInit_0(s_,n,:)=[c1_ c2_ l1_ l2_ u2btildPrime_/(psi*c2_^(-1)) R_ u2btildPrime_];
+V0(s_,n)=(Para.alpha_1*uBGP(c1_,l1_,Para.psi)+Para.alpha_2*uBGP(c2_,l2_,Para.psi))/(1-Para.beta);
+            xInit_0(s_,n,:)=[c1_ c2_ l1_ l2_ u2btildPrime_/(Para.psi*c2_^(-1)) R_ u2btildPrime_];
             n=n+1;
             %end
     end
@@ -101,7 +103,7 @@ Para.g=gTrue;
 x_state=vertcat([squeeze(x_state_(1,:,:)) ones(length(x_state_),1)] ,[squeeze(x_state_(1,:,:)) 2*ones(length(x_state_),1)]);
 scatter(x_state(:,1),x_state(:,2))
 c=c0;
-save([ datapath 'c1.mat' ] , 'c');
+save([ Para.datapath 'c1.mat' ] , 'c');
 % slicing the state space for parfor loop later
 u2btild_slice=x_state(:,1) ;
 R_slice=x_state(:,2) ;
@@ -130,10 +132,15 @@ PolicyRulesStore2=[squeeze(xInit_0(2,:,1))' squeeze(xInit_0(2,:,1))' ...
     squeeze(xInit_0(2,:,7))' squeeze(xInit_0(2,:,7))' ....
     ];
 PolicyRulesStore=vertcat(PolicyRulesStore1,PolicyRulesStore2);
-%load([datapath 'c275.mat'])
+
+if nargin==2 && StartIter >1
+load([Para.datapath 'c' num2str(StartIter) '.mat'])
+else
+    StartIter=1;
+end
 
 % Now we solve for V^1(x,R) using the existing code for the stochastic case
-for iter=2:301
+for iter=StartIter+1:Para.Niter
     tic
     %disp('Starting Iteration No - ')
     %disp(iter)
@@ -152,7 +159,7 @@ for iter=2:301
         xInit=PolicyRulesStore(ctr,:);
         
        
-        [PolicyRules, V_new,exitflag]=CheckGradNAG(u2btild,R,s_,c,V,xInit',Para);
+        [PolicyRules, V_new,exitflag,~]=CheckGradNAG(u2btild,R,s_,c,V,xInit',Para,0);
         ExitFlag(ctr)=exitflag;
         VNew(ctr)=V_new;
         PolicyRulesStore(ctr,:)=PolicyRules;
@@ -171,8 +178,8 @@ for iter=2:301
     
     IndxUnSolved=find(~(ExitFlag==1));
     IndxSolved=find(ExitFlag==1);
-    if mod(iter,5)==0
-    NumTrials=2;
+    if mod(iter,Para.ResolveCtr)==0
+    NumTrials=5;
    UnResolvedPoints
      if NumResolved>0
          Numtrials=3;
@@ -181,8 +188,8 @@ for iter=2:301
     end
       IndxUnSolved=find(~(ExitFlag==1));
     IndxSolved=find(ExitFlag==1);
-    IndxSolved_1=IndxSolved(IndxSolved<=GridSize/sSize);
-     IndxSolved_2=IndxSolved(IndxSolved>GridSize/sSize);
+    IndxSolved_1=IndxSolved(IndxSolved<=GridSize/Para.sSize);
+     IndxSolved_2=IndxSolved(IndxSolved>GridSize/Para.sSize);
 %     
     % Obtain the new coeffecins by projecting the Cheb polynomials for
     % both the value functions
@@ -195,10 +202,10 @@ for iter=2:301
     
     % Store the difference
     cdiff(iter,:)=sum(abs(c-cNew))';
-   cOld=c
+   cOld=c;
     % update the guess by taking a weighted average of the old and new
     % coeffecients
-    c=cNew*grelax+(1-grelax)*cOld;
+    c=cNew*Para.grelax+(1-Para.grelax)*cOld;
     
     disp('Completed Iteration No - ')
     disp(iter)
@@ -209,37 +216,38 @@ for iter=2:301
     %PlotFlagPoints
     %[Tau0,Rprime0,u2btildprime0]=SolveTime0(c,V,1,Para)
     
-    save([ datapath 'c' num2str(iter)] , 'c','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V');
-    btild_1=Para.btild_1;
-
-  disp('Computed V...Now solving V0(btild_1) where btild_1 is')
-disp(btild_1)
-% c1 and c2 solve 
- options=optimset('Display','off');
-[x,fval,exitflagv0,~,grad] = fminunc(@(x)  getValue0(x, btild_1,1,Para,c,V),[ .5 .5*mean(Para.RGrid)^(-1)],options);
-if ~(exitflagv0==1)
-    disp('Optimization failed for V0 once ..trying with fmincon')
-opts = optimset('Algorithm', 'interior-point', 'Display','off', ...
-    'GradObj','off','GradConstr','off',...
-    'MaxIter',1000, ...
-    'TolX', Para.ctol/10, 'TolFun', Para.ctol, 'TolCon', Para.ctol,'MaxTime',200);
-lb=[0.001 0.001];
-ub=[10 10];
-%[x,fval,exitflagv0,output,lambda]  =fmincon(@(x) getValue0(x, btild_1,1,Para,c,V),[ x ],[],[],[],[],lb,ub,[],opts);
-[x,fval,exitflagv0,output,lambda]  =fmincon(@(x) getValue0(x, btild_1,1,Para,c,V),[ 1 mean(Para.RGrid)^(-1)],[],[],[],[],lb,ub,[],opts);
+    save([ Para.datapath 'c' num2str(iter)] , 'c','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V');
+  
 end
-c10 = x(1);
-c20 = x(2);
-R0=c10/c20;
-TotalResources=(c10*n1+c20*n2+g(1));
-FF=R0*theta_2/theta_1;
-DenL2=n1*theta_1*FF+theta_2*n2;
-l20=(TotalResources-n1*theta_1+n1*theta_1*FF)/(DenL2);
-l10= 1-FF*(1-l20);
-BracketTerm=l20/(1-l20)-(l10/(1-l10))*R0;
-u2btildprime0=(((1-psi)/(psi))*BracketTerm+btild_1/(beta*psi)+R0-1)*psi;
-btildprime0=u2btildprime0/(c20^-1*psi) ;
-Rprime0=c20^(-1)/c10^(-1);
-      end
+end
 
- 
+%    btild_1=Para.btild_1;
+% 
+%   disp('Computed V...Now solving V0(btild_1) where btild_1 is')
+% disp(btild_1)
+% % c1 and c2 solve 
+%  options=optimset('Display','off');
+% [x,fval,exitflagv0,~,grad] = fminunc(@(x)  getValue0(x, btild_1,1,Para,c,V),[ .5 .5*mean(Para.RGrid)^(-1)],options);
+% if ~(exitflagv0==1)
+%     disp('Optimization failed for V0 once ..trying with fmincon')
+% opts = optimset('Algorithm', 'interior-point', 'Display','off', ...
+%     'GradObj','off','GradConstr','off',...
+%     'MaxIter',1000, ...
+%     'TolX', Para.ctol/10, 'TolFun', Para.ctol, 'TolCon', Para.ctol,'MaxTime',200);
+% lb=[0.001 0.001];
+% ub=[10 10];
+% %[x,fval,exitflagv0,output,lambda]  =fmincon(@(x) getValue0(x, btild_1,1,Para,c,V),[ x ],[],[],[],[],lb,ub,[],opts);
+% [x,fval,exitflagv0,output,lambda]  =fmincon(@(x) getValue0(x, btild_1,1,Para,c,V),[ 1 mean(Para.RGrid)^(-1)],[],[],[],[],lb,ub,[],opts);
+% end
+% c10 = x(1);
+% c20 = x(2);
+% R0=c10/c20;
+% TotalResources=(c10*n1+c20*n2+g(1));
+% FF=R0*theta_2/theta_1;
+% DenL2=n1*theta_1*FF+theta_2*n2;
+% l20=(TotalResources-n1*theta_1+n1*theta_1*FF)/(DenL2);
+% l10= 1-FF*(1-l20);
+% BracketTerm=l20/(1-l20)-(l10/(1-l10))*R0;
+% u2btildprime0=(((1-psi)/(psi))*BracketTerm+btild_1/(beta*psi)+R0-1)*psi;
+% btildprime0=u2btildprime0/(c20^-1*psi) ;
+% Rprime0=c20^(-1)/c10^(-1);

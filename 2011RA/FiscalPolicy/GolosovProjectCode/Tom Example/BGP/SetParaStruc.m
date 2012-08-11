@@ -12,7 +12,7 @@ end
 
     
 % 1. Paramters describing the preferences
-theta_1=1.3; % type of Agent 1
+theta_1=2; % type of Agent 1
 theta_2=1; % Type of Agent 2
 psi=.6; % Leisure consumption substitution
 beta=.96 ;% subjective time discount factor;
@@ -20,7 +20,7 @@ n1=.5;
 n2=.5;
 % 2. Technology
 g_l=.1; % Government expenditure in low state s_l
-g_h=.2; % Government expenditure in high state s_h
+g_h=.15; % Government expenditure in high state s_h
 P=[.5 .5;.5 .5]; % Transition Matrix for g shocks
 %P=[.75 .25;.75 .25]; % Transition Matrix for g shocks
 alpha_1=.5;
@@ -34,25 +34,29 @@ pertub=0.00;
 ctol=1e-7;
 grelax=.95;
 Niter=300;
+ResolveCtr=5;
   
  ApproxMethod='cheb';
-  u2btildGridSize=20;
-  RGridSize=20;
-  OrderOfAppx_u2btild=10;
-  OrderOfApprx_R=10;
+  u2btildGridSize=10;
+  RGridSize=10;
+  OrderOfAppx_u2btild=5;
+  OrderOfApprx_R=5;
 
 ApproxMethod='spli';
-  u2btildGridSize=20;
+  u2btildGridSize=10;
   RGridSize=10;
-  OrderOfAppx_u2btild=7;
-  OrderOfApprx_R=7;
+  OrderOfAppx_u2btild=5;
+  OrderOfApprx_R=5;
  
   pwdd=pwd;
 compeconpath=[pwdd(1:end-length('\Tom Example\BGP')) sl 'compecon2011' sl];
 knitropath=[pwd sl 'knitro' sl];
 texpath= [pwd sl 'Tex' sl] ;
+
 plotpath= [pwd sl 'Graphs' sl] ;
+
 datapath=[pwd sl 'Data' sl] ;
+
 mkdir(texpath)
 mkdir(plotpath)
 mkdir(datapath)
@@ -73,7 +77,18 @@ Para.alpha_1=alpha_1;
 Para.alpha_2=alpha_2;
 Para.n1=n1;
 Para.n2=n2;
-
+Para.Niter=Niter;
+Para.sSize=sSize;
+Para.u2btildGridSize=u2btildGridSize;
+Para.RGridSize=RGridSize;
+Para.texpath=texpath;
+Para.plotpath=plotpath;
+Para.datapath=datapath;
+Para.ApproxMethod=ApproxMethod;
+Para.OrderOfApprx_R=OrderOfApprx_R;
+Para.OrderOfAppx_u2btild= OrderOfAppx_u2btild;
+Para.grelax=grelax;
+Para.ResolveCtr=ResolveCtr;
 % Document the table for caliberations
 rowLabels = {'$\psi$','$\beta$', '$g_{l}$','$g_{h}$'};
 columnLabels = {};
