@@ -162,7 +162,27 @@ end
 % fplot(@(u1btild) funeval(c,V,u1btild),ucbtild_bounds,'-k');
 % xlabel('$x$','Interpreter','Latex')
 % ylabel('$V(x)$','Interpreter','Latex')
-  print(gcf,'-dpng',[plotpath 'ValueFunction.png'])
+  print(gcf,'-dpng',[plotpath 'ValueFunctionx.png'])
+  
+  
+% % Caption : fig:ValueFunction - This plot depicts the value function 
+figure()
+NumIter=max(round((iter-1)/10),1);
+MaxIter=iter;
+xlist=linspace(min(Para.u2bdiffGrid),max(Para.u2bdiffGrid),4);
+ListIterations=(startIter:NumIter:endIter);
+ for l=1:length(ListIterations)
+     load(['Data/c' num2str(ListIterations(l)) '.mat'])
+
+for xctr=1:4
+    subplot(2,2,xctr)
+    fplot(@(R) funeval(c(s_,:)',V(s_),[xlist(xctr) R]),[Rbounds(1) Rbounds(2)],'-k');
+xlabel('$R$','Interpreter','Latex')
+title(['$x=$' num2str(xlist(xctr))],'Interpreter','Latex')
+hold on
+end
+end
+print(gcf,'-dpng',[plotpath 'ValueFunctionR.png'])
 %  
 % 
 
@@ -613,4 +633,8 @@ figure(figBtildePrime)
  ylabel('$R^{*}$','Interpreter','Latex')
   title(['$R=$' num2str(RList(Rctr))])
 end
+print(figFOCRes,'-dpng',[plotpath 'FOCResFullDomain.png'])
+print(figu2BtildePrime,'-dpng',[plotpath 'u2BtildePrimeFullDomain.png'])
+  print(figBtildePrime,'-dpng',[plotpath 'BtildePrimeFullDomain.png'])
+ print(figRprime,'-dpng',[plotpath 'RPrimeFullDomain.png'])
 end
