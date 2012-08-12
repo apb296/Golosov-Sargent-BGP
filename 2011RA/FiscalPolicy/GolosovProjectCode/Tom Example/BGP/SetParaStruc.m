@@ -43,10 +43,10 @@ ResolveCtr=5;
   OrderOfApprx_R=5;
 
 ApproxMethod='spli';
-  u2btildGridSize=10;
-  RGridSize=10;
-  OrderOfAppx_u2btild=5;
-  OrderOfApprx_R=5;
+  u2btildGridSize=25;
+  RGridSize=25;
+  OrderOfAppx_u2btild=20;
+  OrderOfApprx_R=20;
  
   pwdd=pwd;
 compeconpath=[pwdd(1:end-length('\Tom Example\BGP')) sl 'compecon2011' sl];
