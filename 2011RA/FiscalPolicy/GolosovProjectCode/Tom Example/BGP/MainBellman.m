@@ -1,4 +1,4 @@
-function MainBellman(Para,StartIter)
+%function MainBellman(Para,StartIter)
 close all;
 % This is the main file for computing the minimally stochastic case for BGP
 % preferences
@@ -42,11 +42,11 @@ if ~strcmpi(err.identifier,'MATLAB:UndefinedFunction')
     
     if(matlabpool('size') > 0)
         matlabpool close
-    end
-    %if ~(strcmp(computer,'PCWIN'))
-    %matlabpool open local;
-    %end
+    else
     
+    matlabpool open local;
+    end
+end
     
     %% Computing the  V^T and policies
     %  This function computes c1,c2,l1,l2 and the value for an arbitrary x, R.
@@ -219,7 +219,7 @@ if ~strcmpi(err.identifier,'MATLAB:UndefinedFunction')
         save([ Para.datapath 'c' num2str(iter)] , 'c','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V');
         
     end
-end
+
 
 %    btild_1=Para.btild_1;
 %
