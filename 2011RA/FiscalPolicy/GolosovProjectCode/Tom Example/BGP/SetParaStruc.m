@@ -12,7 +12,7 @@ end
 
     
 % 1. Paramters describing the preferences
-theta_1=2; % type of Agent 1
+theta_1=3; % type of Agent 1
 theta_2=1; % Type of Agent 2
 psi=.6; % Leisure consumption substitution
 beta=.96 ;% subjective time discount factor;
@@ -44,9 +44,9 @@ ResolveCtr=5;
 
 ApproxMethod='spli';
   u2btildGridSize=25;
-  RGridSize=25;
+  RGridSize=15;
   OrderOfAppx_u2btild=20;
-  OrderOfApprx_R=20;
+  OrderOfApprx_R=10;
  
   pwdd=pwd;
 compeconpath=[pwdd(1:end-length('\Tom Example\BGP')) sl 'compecon2011' sl];

@@ -11,9 +11,9 @@ SetParaStruc
 
 % LOAD THE COEFF
 MainBellman(Para,1)
-LastIter=15;
+LastIter=12;
 load(['Data/c' num2str(LastIter) '.mat'])
-GetPlots(10,15,Para)
+GetPlots(2,12,Para)
 % Pick up the test points
 NumTestPoints=10;
 s_=1;
@@ -94,16 +94,15 @@ GetPlots(2,Para.Niter,Para)
 % ---------------------------------------------------------------------------------------
 
 % Load the coeff from the first iteration
-LastIter=2;
+LastIter=3;
 Para.datapath=[Para.datapath 'FirstIter/'];
 Para.texpath=[Para.texpath 'FirstIter/'];
 Para.plotpath=[Para.plotpath 'FirstIter/'];
 mkdir(Para.datapath);
 mkdir(Para.plotpath);
 mkdir(Para.texpath);
-
 load(['Data/c' num2str(LastIter) '.mat'])
-GetPlots(2,2,Para)
+GetPlots(2,3,Para)
 % Plot the Policy Rules 
 
 

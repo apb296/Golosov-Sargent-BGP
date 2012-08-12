@@ -1,4 +1,4 @@
-% Resolve   at points where the FB initial guess did not work
+
 IndxUnSolved=find(~(ExitFlag==1));
     IndxSolved=find(ExitFlag==1);
   %disp('Total Unresolved Points')
