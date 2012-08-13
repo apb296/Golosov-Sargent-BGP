@@ -2,6 +2,9 @@
 % solve the FOC at the points selected in the state space for the final set of coeffecients. The red points
 % denote failure.
 function GetPlots(startIter,endIter,Para)
+olddatapath=Para.datapath;
+oldtexpath=Para.texpath;
+oldplotpath=Para.plotpath;
 close all;
 datapath=Para.datapath;
 for iter=startIter:endIter
@@ -13,8 +16,8 @@ for iter=startIter:endIter
 end
 disp('Govt Exp')
 g=Para.g
-plotpath=Para.plotpath;
-datapath=Para.datapath;
+plotpath=oldplotpath;
+datapath=olddatapath;
 n1=Para.n1;
 n2=Para.n2;
 alpha_1=Para.alpha_1;
@@ -128,6 +131,7 @@ if ~(exitflag==1)
  
 
  end
+ 
  figure()
  plot(Check)
  xlabel('Number of Test Points')
@@ -164,15 +168,13 @@ end
 % ylabel('$V(x)$','Interpreter','Latex')
   print(gcf,'-dpng',[plotpath 'ValueFunctionx.png'])
   
-  
 % % Caption : fig:ValueFunction - This plot depicts the value function 
 figure()
-NumIter=max(round((iter-1)/10),1);
-MaxIter=iter;
+NumIter=max(round((iter-1)/10),1)
 xlist=linspace(min(Para.u2bdiffGrid),max(Para.u2bdiffGrid),4);
 ListIterations=(startIter:NumIter:endIter);
  for l=1:length(ListIterations)
-     load(['Data/c' num2str(ListIterations(l)) '.mat'])
+     load([datapath 'c' num2str(ListIterations(l)) '.mat'])
 
 for xctr=1:4
     subplot(2,2,xctr)
@@ -185,7 +187,6 @@ end
 print(gcf,'-dpng',[plotpath 'ValueFunctionR.png'])
 %  
 % 
-
 % 
 % SOLVE THE T-0 PROBLEM given btild(-1)
 btild_1=Para.btild_1;

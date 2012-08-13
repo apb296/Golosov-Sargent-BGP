@@ -2,7 +2,7 @@
 
 close all
 clear all
-SetParaStruc
+
 
 % ---------------------------------------------------------------------------------------
 %% CHECK THE FOCs
@@ -10,12 +10,24 @@ SetParaStruc
 
 
 % LOAD THE COEFF
-LastIter=3;
+LastIter=200;
 load(['Data/c' num2str(LastIter) '.mat'])
-GetPlots(2,LastIter,Para)
+SetParaStruc
+
+
+
+
+
+
+
+
+
+
+
+%GetPlots(190,LastIter,Para)
 
 % Pick up the test points
-NumTestPoints=10;
+NumTestPoints=5;
 s_=1;
 % FIX the controls at FB levels
 [c1FB c2FB l1FB l2FB yFB g_yFB_h Agent1WageShareFB_h]=getFB(Para,1);
@@ -58,9 +70,10 @@ for n=1:NumTestPoints
 R=xTarget(n,2);
 s_=xTarget(n,3);
 [PolicyRulesInit]=GetInitialApproxPolicy(xTarget(n,:),x_state,PolicyRulesStore);
- [DiffFOCZero(n,:),DiffFocOpt(n,:)]=CheckFOC(u2btild,R,s_,c,V,PolicyRulesInit,Para) ;
+ [DiffFOCZero(n,:),DiffFocOpt(n,:),exitflag(n,:)]=CheckFOC(u2btild,R,s_,c,V,PolicyRulesInit,Para) ;
 end
-[xTarget DiffFOCZero DiffFocOpt]
+
+[xTarget DiffFOCZero DiffFocOpt exitflag]
 % Summarize the difference in a TEx table
 
 
@@ -99,6 +112,7 @@ GetPlots(2,Para.Niter,Para)
 
 % Load the coeff from the first iteration
 LastIter=2;
+Para.Niter=5;
 Para.datapath=[Para.datapath 'FirstIter/'];
 Para.texpath=[Para.texpath 'FirstIter/'];
 Para.plotpath=[Para.plotpath 'FirstIter/'];

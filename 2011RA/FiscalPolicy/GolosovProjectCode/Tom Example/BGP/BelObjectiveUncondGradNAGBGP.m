@@ -56,11 +56,13 @@ global V Vcoef R u2btild Par s_
     Vobj = P(s_,1)*(alpha(1)*uBGP(c1_1,l1(1),psi)+alpha(2)*uBGP(c2_1,l2(1),psi)...
             +beta*funeval(Vcoef{1},V(1),X));
     dV = funeval(Vcoef{1},V(1),X,eye(2));
+      % Direct gardients with c_1_1,c_1_2,c_2_!
     grad1(1) = P(s_,1)*(alpha(1)*psi*c1_1^(-1)+beta*c2_1^(-1)*dV(2)); %<ok - Anmol>
     grad1(2) = 0; %<ok - Anmol>
     grad1(3) = P(s_,1)*(alpha(2)*psi*c2_1^(-1)-beta*c2_1^(-2)*(psi*btildprime(1)*dV(1)+c1_1*dV(2))); %<ok - Anmol>
     
-    grad1 = grad1+P(s_,1)*( psi*grad_btildprime(:,1)*c2_1^(-1)*beta*dV(1) - alpha(1)*(1-psi)*l1grad(:,1)/(1-l1(1))...
+    grad1 = grad1+P(s_,1)*( psi*grad_btildprime(:,1)*c2_1^(-1)*beta*dV(1) ...
+        - alpha(1)*(1-psi)*l1grad(:,1)/(1-l1(1))...
         -alpha(2)*(1-psi)*l2grad(:,1)/(1-l2(1))); %<ok - Anmol>
     
     grad2 = zeros(3,1);

@@ -103,18 +103,18 @@ global V Vcoef R u2btild Par s_ flagCons
     
     
     % Direct gardients with c_1_1,c_1_2,c_2_!
-    
     grad1(1) = P(s_,1)*(alpha(1)*psi*c1_1^(-1)+beta*c2_1^(-1)*dV(2));
     grad1(2) = 0;
     grad1(3) = P(s_,1)*(alpha(2)*psi*c2_1^(-1) ...
         -c2_1^(-2)*(psi*btildprime(1)*(-lambda_I(1)) + c1_1*beta*dV(2))); % Anmol shifted the beta to dV(2)
 % Indirect gradients via btildprime, l1 and l2
 
-    grad1 = grad1+P(s_,1)*( psi*grad_btildprime(:,1)*c2_1^(-1)*(-lambda_I(1))...
-        - alpha(1)*(1-psi)*l1grad(:,1)/(1-l1(1))...
-        -alpha(2)*(1-psi)*l2grad(:,1)/(1-l2(1)));
+    grad1 = grad1+P(s_,1)*( psi*grad_btildprime(:,1)*c2_1^(-1)*(-lambda_I(1))... % ok
+        - alpha(1)*(1-psi)*l1grad(:,1)/(1-l1(1))... %ok
+        -alpha(2)*(1-psi)*l2grad(:,1)/(1-l2(1))); %ok
    % FOC with respect to x'(1)
     res(4) = P(s_,1)*lambda_I(1)+P(s_,1)*beta*dV(1)+MuL(1)-MuH(1); % Anmol - Changed the sign on MuH to minus
+   %ok lambda(1)=dV(1)
    
     % Definition of x'
     res(6) = u2btildprime(1)-psi*c2_1^(-1)*btildprime(1);
@@ -138,7 +138,7 @@ global V Vcoef R u2btild Par s_ flagCons
         -alpha(1)*(1-psi)*l1grad(:,2)/(1-l1(2))...
         -alpha(2)*(1-psi)*l2grad(:,2)/(1-l2(2)));
     % FOC with x'(2)
-    res(5) = P(s_,2)*lambda_I(2)+P(s_,2)*beta*dV(2)+MuL(2)-MuH(2); % Anmol - Changed the sign on MuH to minus
+    res(5) = P(s_,2)*lambda_I(2)+P(s_,2)*beta*dV(1)+MuL(2)-MuH(2); % Anmol - Changed the sign on MuH to minus and corrected typo for dV(2-->1)
     % Definition of x'(2)
     res(7) = u2btildprime(2)-psi*c2_2^(-1)*btildprime(2);
     res(1:3) = grad1+grad2;

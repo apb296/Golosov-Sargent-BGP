@@ -1,4 +1,4 @@
-u2btildMin=-(theta_1-theta_2)/(1-beta)*(1/(n1*theta_1+n2*theta_2-g(1)));
+u2btildMin=-(Para.theta_1-Para.theta_2)/(1-Para.beta)*(1/(Para.n1*Para.theta_1+Para.n2*Para.theta_2-Para.g(1)));
 u2btildMin=u2btildMin/3.2;
 %u2btildMin=-(Para.beta/(1-Para.beta))*(max(Para.g)/(1-max(Para.g)))*(Para.psi/(c1FB))*2;
 u2btildMax=-u2btildMin;
