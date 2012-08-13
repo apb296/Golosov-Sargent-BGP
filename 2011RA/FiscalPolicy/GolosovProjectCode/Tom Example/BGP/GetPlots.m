@@ -1,6 +1,7 @@
 % CAPTION : fig:flagPoints - This plots the sucess of the optimizer to
 % solve the FOC at the points selected in the state space for the final set of coeffecients. The red points
 % denote failure.
+% change in master
 function GetPlots(startIter,endIter,Para)
 close all;
 datapath=Para.datapath;
