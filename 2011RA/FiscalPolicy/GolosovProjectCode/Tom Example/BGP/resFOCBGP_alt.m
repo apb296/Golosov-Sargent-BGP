@@ -138,7 +138,7 @@ global V Vcoef R u2btild Par s_ flagCons
         -alpha(1)*(1-psi)*l1grad(:,2)/(1-l1(2))...
         -alpha(2)*(1-psi)*l2grad(:,2)/(1-l2(2)));
     % FOC with x'(2)
-    res(5) = P(s_,2)*lambda_I(2)+P(s_,2)*beta*dV(2)+MuL(2)-MuH(2); % Anmol - Changed the sign on MuH to minus
+    res(5) = P(s_,2)*lambda_I(2)+P(s_,2)*beta*dV(1)+MuL(2)-MuH(2); % Anmol - Changed the sign on MuH to minus and typo for dV
     % Definition of x'(2)
     res(7) = u2btildprime(2)-psi*c2_2^(-1)*btildprime(2);
     res(1:3) = grad1+grad2;

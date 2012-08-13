@@ -68,10 +68,11 @@ X(1,:) = [psi*c2_1^(-1)*btildprime(1),c2_1^(-1)/c1_1^(-1)];%state next period
 X(2,:) = [psi*c2_2^(-1)*btildprime(2),c2_2^(-1)/c1_2^(-1)];%state next period
 
 % Compute the guess for the multipliers of the constraint problem
-dV_x=[funeval(Vcoef{1},V(1),[u2btild R],[1 0])];
-dV_R=[funeval(Vcoef{1},V(1),[u2btild R],[0 1])];
-Lambda_I0=-dV_x;
-MultiplierGuess=[Lambda_I0 Lambda_I0];
+dV_x(1)=[funeval(Vcoef{1},V(1),X(1,:),[1 0])];
+dV_x(2)=[funeval(Vcoef{2},V(2),X(2,:),[1,0])];
+%dV_R=[funeval(Vcoef{1},V(1),[u2btild R],[0 1])];
+Lambda_I0=-beta*dV_x;
+MultiplierGuess=[Lambda_I0];
 xInit=[c1_1 c1_2 c2_1 u2btildprime(1) u2btildprime(2) MultiplierGuess];
 
 % set flagCons to interior solution
