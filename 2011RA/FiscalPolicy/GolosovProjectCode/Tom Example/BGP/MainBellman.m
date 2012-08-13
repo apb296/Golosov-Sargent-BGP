@@ -1,4 +1,4 @@
-function MainBellman(Para,StartIter)
+%function MainBellman(Para,StartIter)
 close all;
 % This is the main file for computing the minimally stochastic case for BGP
 % preferences
@@ -154,9 +154,9 @@ end
         IndxUnSolved=[];
         ExitFlag=[];
         PolicyRulesStoreOld=PolicyRulesStore;
-        %parfor ctr=1:GridSize/2
+        parfor ctr=1:GridSize/2
         
-        for ctr=1:GridSize/2
+%        for ctr=1:GridSize/2
             
             u2btild=u2btild_slice(ctr) ;
             R=R_slice(ctr) ;
@@ -199,9 +199,9 @@ end
         % both the value functions
         
         
-   %    cNew(1,:)=funfitxy(V(1),x_state(IndxSolved_1,1:2),VNew(IndxSolved_1)' );
+      cNew(1,:)=funfitxy(V(1),x_state(IndxSolved_1,1:2),VNew(IndxSolved_1)' );
         %tic
-        [ cNew(1,:) ] = FitConcaveValueFunction(V(1),VNew(IndxSolved_1)',x_state(IndxSolved_1,1:2));
+%        [ cNew(1,:) ] = FitConcaveValueFunction(V(1),VNew(IndxSolved_1)',x_state(IndxSolved_1,1:2));
         %toc
         
         cNew(2,:)=cNew(1,:);
