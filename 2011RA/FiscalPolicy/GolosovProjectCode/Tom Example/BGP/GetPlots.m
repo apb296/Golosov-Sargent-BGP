@@ -2,22 +2,20 @@
 % solve the FOC at the points selected in the state space for the final set of coeffecients. The red points
 % denote failure.
 function GetPlots(startIter,endIter,Para)
+close all;
 olddatapath=Para.datapath;
 oldtexpath=Para.texpath;
 oldplotpath=Para.plotpath;
-close all;
-datapath=Para.datapath;
+plotpath=oldplotpath;
+datapath=olddatapath;
 for iter=startIter:endIter
-    
-    
     load([datapath 'c' num2str(iter) '.mat'])
     numsolved(iter)=length(IndxSolved);
 %[Tau0,Rprime0,u2btildprime0]=SolveTime0(c,V,1,Para)
 end
 disp('Govt Exp')
 g=Para.g
-plotpath=oldplotpath;
-datapath=olddatapath;
+
 n1=Para.n1;
 n2=Para.n2;
 alpha_1=Para.alpha_1;
@@ -148,7 +146,8 @@ if ~(exitflag==1)
 % 
 % % Caption : fig:ValueFunction - This plot depicts the value function 
 NumIter=round((iter-1)/10);
-MaxIter=iter;
+
+figure()
 ListIterations=(startIter:NumIter:endIter);
  for l=1:length(ListIterations)
      load([ datapath 'c' num2str(ListIterations(l)) '.mat'])
@@ -170,7 +169,7 @@ end
   
 % % Caption : fig:ValueFunction - This plot depicts the value function 
 figure()
-NumIter=max(round((iter-1)/10),1)
+NumIter=max(round((iter-1)/10),1);
 xlist=linspace(min(Para.u2bdiffGrid),max(Para.u2bdiffGrid),4);
 ListIterations=(startIter:NumIter:endIter);
  for l=1:length(ListIterations)
@@ -222,7 +221,7 @@ Rprime0=c20^(-1)/c10^(-1);
 
 
 % RUN SIMULATION
-NumSim=110;
+NumSim=500;
 u2btildHist=zeros(NumSim,1);
 btildHist=zeros(NumSim,1);
 RHist=zeros(NumSim,1);
@@ -306,6 +305,8 @@ end
 %  end
 
 end
+save([ datapath 'SimData.mat'] , 'sHist','u2btildHist','RHist');
+
 figCombSimul=figure('Name','Simulations');
 figCombSimul_b=figure('Name','Simulations');
   % SIMULATION 1  - btild_2
