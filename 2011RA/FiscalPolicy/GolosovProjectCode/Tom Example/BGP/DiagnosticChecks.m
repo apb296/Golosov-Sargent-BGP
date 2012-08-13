@@ -10,10 +10,10 @@ SetParaStruc
 
 
 % LOAD THE COEFF
-MainBellman(Para,1)
-LastIter=12;
+LastIter=3;
 load(['Data/c' num2str(LastIter) '.mat'])
-GetPlots(2,12,Para)
+GetPlots(2,LastIter,Para)
+
 % Pick up the test points
 NumTestPoints=10;
 s_=1;
@@ -37,7 +37,11 @@ R=Rbounds(1)+(Rbounds(2)-Rbounds(1))*rand;
 xTarget(n,:)=[u2btild R s_];
 DiffDerivaties(n,:)=CheckDerivatives(u2btild,R,s_,c,V,TestControls,Para,deltah);
 end
-[xTarget DiffDerivaties]
+matrix2latex([xTarget], [Para.texpath 'TargetPoints.tex'] , 'rowLabels', {}, 'columnLabels', {}, 'alignment', 'c', 'format', '%-6.2g', 'size', 'tiny');
+matrix2latex([DiffDerivaties], [Para.texpath 'CheckDerivatives.tex'] , 'rowLabels', {}, 'columnLabels', {'$c_1(1)$','$c_1(2)$','c_2(1)'}, 'alignment', 'c', 'format', '%-6.2g', 'size', 'tiny');
+
+
+
 
 
 
@@ -94,7 +98,7 @@ GetPlots(2,Para.Niter,Para)
 % ---------------------------------------------------------------------------------------
 
 % Load the coeff from the first iteration
-LastIter=3;
+LastIter=2;
 Para.datapath=[Para.datapath 'FirstIter/'];
 Para.texpath=[Para.texpath 'FirstIter/'];
 Para.plotpath=[Para.plotpath 'FirstIter/'];
@@ -102,7 +106,7 @@ mkdir(Para.datapath);
 mkdir(Para.plotpath);
 mkdir(Para.texpath);
 load(['Data/c' num2str(LastIter) '.mat'])
-GetPlots(2,3,Para)
+GetPlots(2,2,Para)
 % Plot the Policy Rules 
 
 

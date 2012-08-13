@@ -1,5 +1,6 @@
-%u2btildMin=-(theta_1-theta_2)/(1-beta)*(1/(n1*theta_1+n2*theta_2-g(1)));
-u2btildMin=-(Para.beta/(1-Para.beta))*(max(Para.g)/(1-max(Para.g)))*1.5;
+u2btildMin=-(theta_1-theta_2)/(1-beta)*(1/(n1*theta_1+n2*theta_2-g(1)));
+u2btildMin=u2btildMin/3.2;
+%u2btildMin=-(Para.beta/(1-Para.beta))*(max(Para.g)/(1-max(Para.g)))*(Para.psi/(c1FB))*2;
 u2btildMax=-u2btildMin;
 u2btildGrid=linspace(u2btildMin,u2btildMax,Para.u2btildGridSize);
 %u2btildGrid=horzcat(u2btildGrid,linspace(u2btildMax/2*1.02,u2btildMax,u2btildGridSize/2));
@@ -16,8 +17,9 @@ end
 scatter(Rbar,u2btildGrid)
 
 % R=u_2/u_1 = c1/c2
-RMin=max(Rbar)*1.1;
-RMax=max(Rbar)*1.5;
+RMin=max(Rbar)*1.05;
+%RMax=max(Rbar)*1.5;
+RMax=max(Rbar)*1.9;
 RGrid=linspace(RMin,RMax,Para.RGridSize);
 
 Para.RGrid=RGrid;

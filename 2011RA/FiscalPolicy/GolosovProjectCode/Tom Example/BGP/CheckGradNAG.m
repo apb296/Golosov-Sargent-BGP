@@ -25,7 +25,7 @@ ctol=Para.ctol;
 %% Now solve the unconstraint problem FOC using NAG
 % use the last solution
 warning('off', 'NAG:warning')
-[x, fvec,exitflag]=c05nb('BelObjectiveUncondGradNAGBGP',xInit,'xtol',1e-7);
+[x, fvec,exitflag]=c05nb('BelObjectiveUncondGradNAGBGP',xInit);
 if exitflag==4
     exitflag=-2;
 else
@@ -84,19 +84,19 @@ while  (strcmpi(flagCons,flagConsOld))==0
     
     % Check the upper limits
     % if upper limit binds for state 1 only
-    if u2btildprime(1)>= u2btildUL && u2btildprime(2)<= u2btildUL
+    if u2btildprime(1)> u2btildUL && u2btildprime(2)< u2btildUL
         flagCons='UL_';
         xInit=[c1_1 c1_2 c2_1 (u2btildprime(1)-u2btildUL) u2btildprime(2) MultiplierGuess];
         
     end
     % if upper limit binds for state 2 only
-    if u2btildprime(1) <= u2btildUL && u2btildprime(2)>=u2btildUL
+    if u2btildprime(1) < u2btildUL && u2btildprime(2)>u2btildUL
         flagCons='_UL';
         xInit=[c1_1 c1_2 c2_1 u2btildprime(1)  (u2btildprime(2)-u2btildUL) MultiplierGuess];
         
     end
     % if upper limit binds for both the states
-    if u2btildprime(1)>= u2btildUL && u2btildprime(2) >= u2btildUL
+    if u2btildprime(1)> u2btildUL && u2btildprime(2) > u2btildUL
         flagCons='ULUL';
         xInit=[c1_1 c1_2 c2_1 (u2btildprime(1)- u2btildUL) (u2btildprime(2) - u2btildUL) MultiplierGuess];
         
@@ -104,17 +104,17 @@ while  (strcmpi(flagCons,flagConsOld))==0
     
     % Check the lower limits
     % if lower limit binds for state 1 only
-    if u2btildprime(1)<= u2btildLL && u2btildprime(2)>= u2btildLL
+    if u2btildprime(1)< u2btildLL && u2btildprime(2)> u2btildLL
         flagCons='LL_';
         xInit=[c1_1 c1_2 c2_1 (u2btildLL-u2btildprime(1)) u2btildprime(2) MultiplierGuess];
     end
     % if lower limit binds for state 2 only
-    if u2btildprime(1) >= u2btildLL && u2btildprime(2) <=u2btildLL
+    if u2btildprime(1) > u2btildLL && u2btildprime(2) <u2btildLL
         flagCons='_LL';
         xInit=[c1_1 c1_2 c2_1 u2btildprime(1) (u2btildLL-u2btildprime(2)) MultiplierGuess];
     end
     % if lower limit binds for both the states
-    if u2btildprime(1) <= u2btildLL && u2btildprime(2) <=u2btildLL
+    if u2btildprime(1) < u2btildLL && u2btildprime(2) <u2btildLL
         flagCons='LLLL';
         xInit=[c1_1 c1_2 c2_1 (u2btildLL-u2btildprime(1)) (u2btildLL-u2btildprime(2)) MultiplierGuess];
         
@@ -124,7 +124,7 @@ while  (strcmpi(flagCons,flagConsOld))==0
         %% RESOLVE with KKT conditions
         
         warning('off', 'NAG:warning')
-        [x, fvec,exitflag]=c05nb('resFOCBGP_alt',xInit,'xtol',1e-7);
+        [x, fvec,exitflag]=c05nb('resFOCBGP_alt',xInit);
         
         if exitflag==4
             exitflag=-2;

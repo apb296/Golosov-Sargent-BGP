@@ -1,4 +1,4 @@
-%function MainBellman(Para,StartIter)
+function MainBellman(Para,StartIter)
 close all;
 % This is the main file for computing the minimally stochastic case for BGP
 % preferences
@@ -32,20 +32,20 @@ BuildGrid
 disp(RGrid)
 disp(u2btildGrid)
 %% Set the Parallel Config
-err='';
+err=[];
 try
     matlabpool
 catch err
 end
-if ~strcmpi(err.identifier,'MATLAB:UndefinedFunction')
+if isempty(err)
     
     
     if(matlabpool('size') > 0)
         matlabpool close
-    else
+    end
     
     matlabpool open local;
-    end
+    
 end
     
     %% Computing the  V^T and policies
@@ -56,8 +56,8 @@ end
     % by solving for the two roots of this equation and using the one that
     % supports the highest utility
     tic
-    gTrue=Para.g;
-    Para.g=mean(gTrue)*ones(2,1);
+    %gTrue=Para.g;
+    %Para.g=mean(gTrue)*ones(2,1);
     for s_=1:Para.sSize
         n=1;
         if s_==1
@@ -73,6 +73,8 @@ end
                     % Solve for  c1
                     
                     c1_=max(getValueC1(u2btild_,R_,s_,Para ),.0001);
+                    
+                  
                     if c1_<.001
                         ExitFlagT(n)=0;
                     else
@@ -99,10 +101,15 @@ end
             xInit_0(s_,:)=xInit_0(s_-1,:);
         end
     end
-    Para.g=gTrue;
+    disp('Number of points solved in initialization')
+    sum(ExitFlagT)
+    disp('Number of points solved out of a total of ')
+    length(ExitFlagT)
+    
+    %Para.g=gTrue;
     x_state=vertcat([squeeze(x_state_(1,:,:)) ones(length(x_state_),1)] ,[squeeze(x_state_(1,:,:)) 2*ones(length(x_state_),1)]);
     scatter(x_state(:,1),x_state(:,2))
-    c=c0;
+    c=c0
     save([ Para.datapath 'c1.mat' ] , 'c');
     % slicing the state space for parfor loop later
     u2btild_slice=x_state(:,1) ;
@@ -138,7 +145,6 @@ end
     else
         StartIter=1;
     end
-    
     % Now we solve for V^1(x,R) using the existing code for the stochastic case
     for iter=StartIter+1:Para.Niter
         tic
@@ -150,15 +156,13 @@ end
         PolicyRulesStoreOld=PolicyRulesStore;
         %parfor ctr=1:GridSize/2
         
-        parfor ctr=1:GridSize/2
+        for ctr=1:GridSize/2
             
             u2btild=u2btild_slice(ctr) ;
             R=R_slice(ctr) ;
             s_=s_slice(ctr);
             %[xInit]=GetInitialApproxPolicy([u2btild R s_],x_state,PolicyRulesStoreOld);
             xInit=PolicyRulesStore(ctr,:);
-            
-            
             [PolicyRules, V_new,exitflag,~]=CheckGradNAG(u2btild,R,s_,c,V,xInit',Para,0);
             ExitFlag(ctr)=exitflag;
             VNew(ctr)=V_new;
@@ -179,7 +183,7 @@ end
         IndxUnSolved=find(~(ExitFlag==1));
         IndxSolved=find(ExitFlag==1);
         if mod(iter,Para.ResolveCtr)==0
-            NumTrials=5;
+            NumTrials=2;
             UnResolvedPoints
             if NumResolved>0
                 Numtrials=3;
@@ -195,7 +199,10 @@ end
         % both the value functions
         
         
-        cNew(1,:)=funfitxy(V(1),x_state(IndxSolved_1,1:2),VNew(IndxSolved_1)' );
+   %    cNew(1,:)=funfitxy(V(1),x_state(IndxSolved_1,1:2),VNew(IndxSolved_1)' );
+        %tic
+        [ cNew(1,:) ] = FitConcaveValueFunction(V(1),VNew(IndxSolved_1)',x_state(IndxSolved_1,1:2));
+        %toc
         
         cNew(2,:)=cNew(1,:);
         %cNew(2,:)=funfitxy(V(2),x_state(IndxSolved_2,1:2),VNew(IndxSolved_2)' );
