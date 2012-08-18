@@ -221,7 +221,7 @@ Rprime0=c20^(-1)/c10^(-1);
 
 
 % RUN SIMULATION
-NumSim=500;
+NumSim=5000;
 u2btildHist=zeros(NumSim,1);
 btildHist=zeros(NumSim,1);
 RHist=zeros(NumSim,1);
