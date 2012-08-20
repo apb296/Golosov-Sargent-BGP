@@ -189,7 +189,7 @@ print(gcf,'-dpng',[plotpath 'ValueFunctionR.png'])
 % 
 % SOLVE THE T-0 PROBLEM given btild(-1)
 btild_1=Para.btild_1;
-
+btild_1=.1;
   disp('Computed V...Now solving V0(btild_1) where btild_1 is')
 disp(btild_1)
 % c1 and c2 solve 
@@ -221,7 +221,7 @@ Rprime0=c20^(-1)/c10^(-1);
 
 
 % RUN SIMULATION
-NumSim=500;
+NumSim=1000;
 u2btildHist=zeros(NumSim,1);
 btildHist=zeros(NumSim,1);
 RHist=zeros(NumSim,1);
@@ -242,8 +242,14 @@ RHist(1)=Rprime0;
 YHist(1)=n1*c10+n2*c20+g(1);
 sHist(1)=1;
 n=1;
-
+tic
 for i=1:NumSim
+    if mod(i,100)==0
+        disp('Running Simulation, t=')
+        disp(i)
+        toc
+        tic
+    end
     % STATE (t) - x,R,s_
     u2btild=u2btildHist(i);
     R=RHist(i);

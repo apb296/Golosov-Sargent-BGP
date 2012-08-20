@@ -10,10 +10,13 @@ clear all
 
 
 % LOAD THE COEFF
-LastIter=250;
+LastIter=200;
 load(['Data/c' num2str(LastIter) '.mat'])
 SetParaStruc
-GetPlots(2,LastIter,Para)
+%GetPlots(2,LastIter,Para)
+btild0=1
+NumSim=2000
+RunSimulations(2,LastIter,btild0,NumSim,Para)
 % Pick up the test points
 NumTestPoints=20;
 s_=1;
