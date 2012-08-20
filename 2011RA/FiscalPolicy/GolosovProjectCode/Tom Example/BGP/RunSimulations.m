@@ -95,7 +95,7 @@ sHist(1)=1;
 n=1;
 tic
 for i=1:NumSim
-    if mod(i,100)==0
+    if mod(i,500)==0
         disp('Running Simulation, t=')
         disp(i)
         toc
