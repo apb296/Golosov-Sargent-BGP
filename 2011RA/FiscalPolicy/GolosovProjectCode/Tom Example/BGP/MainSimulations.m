@@ -22,7 +22,7 @@ end
   
 
 % LOAD THE COEFF
-LastIter=200;
+LastIter=250;
 load(['Data/c' num2str(LastIter) '.mat'])
 SetParaStruc
 %
