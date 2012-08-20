@@ -56,8 +56,8 @@ end
     % by solving for the two roots of this equation and using the one that
     % supports the highest utility
     tic
-    %gTrue=Para.g;
-    %Para.g=mean(gTrue)*ones(2,1);
+    gTrue=Para.g;
+    Para.g=mean(gTrue)*ones(2,1);
     for s_=1:Para.sSize
         n=1;
         if s_==1
@@ -106,7 +106,7 @@ end
     disp('Number of points solved out of a total of ')
     length(ExitFlagT)
     
-    %Para.g=gTrue;
+    Para.g=gTrue;
     x_state=vertcat([squeeze(x_state_(1,:,:)) ones(length(x_state_),1)] ,[squeeze(x_state_(1,:,:)) 2*ones(length(x_state_),1)]);
     scatter(x_state(:,1),x_state(:,2))
     c=c0
@@ -146,6 +146,7 @@ end
         StartIter=1;
     end
     % Now we solve for V^1(x,R) using the existing code for the stochastic case
+    Para.g
     for iter=StartIter+1:Para.Niter
         tic
         %disp('Starting Iteration No - ')
@@ -199,9 +200,9 @@ end
         % both the value functions
         
         
-   %    cNew(1,:)=funfitxy(V(1),x_state(IndxSolved_1,1:2),VNew(IndxSolved_1)' );
+      cNew(1,:)=funfitxy(V(1),x_state(IndxSolved_1,1:2),VNew(IndxSolved_1)' );
         %tic
-        [ cNew(1,:) ] = FitConcaveValueFunction(V(1),VNew(IndxSolved_1)',x_state(IndxSolved_1,1:2));
+   %     [ cNew(1,:) ] = FitConcaveValueFunction(V(1),VNew(IndxSolved_1)',x_state(IndxSolved_1,1:2));
         %toc
         
         cNew(2,:)=cNew(1,:);

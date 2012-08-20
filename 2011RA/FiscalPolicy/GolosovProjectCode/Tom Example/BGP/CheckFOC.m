@@ -1,6 +1,6 @@
 % Inputs - xInit, state variables - u2btild,,R,s_  coeff, value
 % function, para
-function [DiffFOCZero,DiffFOCOpt]=CheckFOC(u2bdiff,RR,s,c,VV,xInit,Para)
+function [DiffFOCZero,DiffFOCOpt,exitflag]=CheckFOC(u2bdiff,RR,s,c,VV,xInit,Para)
 global V Vcoef R u2btild Par s_ flagCons
 
 %Get the initial guess for the uconstraint problem. With the simplification
@@ -25,11 +25,11 @@ ctol=Para.ctol;
 %% Now solve the unconstraint problem FOC using NAG
 % use the last solution
 warning('off', 'NAG:warning')
-[x, ~,exitflag]=c05nb('BelObjectiveUncondGradNAGBGP',xInit,'xtol',1e-7);
-if exitflag==4
-   exitflag=-2;
+[x, ~,exitflagunc]=c05nb('BelObjectiveUncondGradNAGBGP',xInit,'xtol',1e-7);
+if exitflagunc==4
+   exitflagunc=-2;
    else
-    exitflag=1;
+    exitflagunc=1;
 end
 xUncons=x;
 
@@ -64,29 +64,37 @@ X(1,:) = [psi*c2_1^(-1)*btildprime(1),c2_1^(-1)/c1_1^(-1)];%state next period
 X(2,:) = [psi*c2_2^(-1)*btildprime(2),c2_2^(-1)/c1_2^(-1)];%state next period
 
 % Compute the guess for the multipliers of the constraint problem
-dV_x=[funeval(Vcoef{1},V(1),[u2btild R],[1 0])];
-dV_R=[funeval(Vcoef{1},V(1),[u2btild R],[0 1])];
-Lambda_I0=-dV_x;
-MultiplierGuess=[Lambda_I0 Lambda_I0];
+dV_x(1)=[funeval(Vcoef{1},V(1),X(1,:),[1 0])];
+dV_x(2)=[funeval(Vcoef{2},V(2),X(2,:),[1 0])];
+Lambda_I0=-beta*dV_x;
+MultiplierGuess=[Lambda_I0];
 xInit=[c1_1 c1_2 c2_1 u2btildprime(1) u2btildprime(2) MultiplierGuess];
 
 
 
 
-
 flagCons='int';
-[xCons, fvec,exitflag]=c05nb('resFOCBGP_alt',xInit,'xtol',1e-7);
 
-if exitflag==4
-    exitflag=-2;
+[xCons, fvec,exitflagcons]=c05nb('resFOCBGP_alt',xInit,'xtol',1e-7);
+
+if exitflagcons==4
+    exitflagcons=-2;
     %x=xInit;
 else
-    exitflag=1;
+    exitflagcons=1;
 end
   DiffFOCZero=xCons(1:3)-xUncons;
   
 opts = optimset('Algorithm', 'interior-point', 'Display','off','TolX',1e-7);    
 xoptguess=xUncons;
-[xOpt, fvec,exitflag]=ktrlink(@(x) -Value3cont(x) ,xoptguess,[],[],[],[],[],[], [],opts);
+[xOpt, fvec,exitflagopt]=ktrlink(@(x) -Value3cont(x) ,xoptguess,[],[],[],[],[],[], [],opts);
+if exitflagopt==4
+    exitflagopt=-2;
+    %x=xInit;
+else
+    exitflagopt=1;
+end
+
 DiffFOCOpt=max(xOpt-xCons(1:3),xOpt-xUncons);
+exitflag=exitflagopt*exitflagunc*exitflagcons;
 end

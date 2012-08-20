@@ -3,18 +3,19 @@
 % denote failure.
 function GetPlots(startIter,endIter,Para)
 close all;
-datapath=Para.datapath;
+olddatapath=Para.datapath;
+oldtexpath=Para.texpath;
+oldplotpath=Para.plotpath;
+plotpath=oldplotpath;
+datapath=olddatapath;
 for iter=startIter:endIter
-    
-    
     load([datapath 'c' num2str(iter) '.mat'])
     numsolved(iter)=length(IndxSolved);
 %[Tau0,Rprime0,u2btildprime0]=SolveTime0(c,V,1,Para)
 end
 disp('Govt Exp')
 g=Para.g
-plotpath=Para.plotpath;
-datapath=Para.datapath;
+
 n1=Para.n1;
 n2=Para.n2;
 alpha_1=Para.alpha_1;
@@ -128,6 +129,7 @@ if ~(exitflag==1)
  
 
  end
+ 
  figure()
  plot(Check)
  xlabel('Number of Test Points')
@@ -144,7 +146,8 @@ if ~(exitflag==1)
 % 
 % % Caption : fig:ValueFunction - This plot depicts the value function 
 NumIter=round((iter-1)/10);
-MaxIter=iter;
+
+figure()
 ListIterations=(startIter:NumIter:endIter);
  for l=1:length(ListIterations)
      load([ datapath 'c' num2str(ListIterations(l)) '.mat'])
@@ -164,15 +167,13 @@ end
 % ylabel('$V(x)$','Interpreter','Latex')
   print(gcf,'-dpng',[plotpath 'ValueFunctionx.png'])
   
-  
 % % Caption : fig:ValueFunction - This plot depicts the value function 
 figure()
 NumIter=max(round((iter-1)/10),1);
-MaxIter=iter;
 xlist=linspace(min(Para.u2bdiffGrid),max(Para.u2bdiffGrid),4);
 ListIterations=(startIter:NumIter:endIter);
  for l=1:length(ListIterations)
-     load(['Data/c' num2str(ListIterations(l)) '.mat'])
+     load([datapath 'c' num2str(ListIterations(l)) '.mat'])
 
 for xctr=1:4
     subplot(2,2,xctr)
@@ -185,7 +186,6 @@ end
 print(gcf,'-dpng',[plotpath 'ValueFunctionR.png'])
 %  
 % 
-
 % 
 % SOLVE THE T-0 PROBLEM given btild(-1)
 btild_1=Para.btild_1;
@@ -221,7 +221,7 @@ Rprime0=c20^(-1)/c10^(-1);
 
 
 % RUN SIMULATION
-NumSim=110;
+NumSim=5000;
 u2btildHist=zeros(NumSim,1);
 btildHist=zeros(NumSim,1);
 RHist=zeros(NumSim,1);
@@ -305,6 +305,8 @@ end
 %  end
 
 end
+save([ datapath 'SimData.mat'] , 'sHist','u2btildHist','RHist');
+
 figCombSimul=figure('Name','Simulations');
 figCombSimul_b=figure('Name','Simulations');
   % SIMULATION 1  - btild_2
