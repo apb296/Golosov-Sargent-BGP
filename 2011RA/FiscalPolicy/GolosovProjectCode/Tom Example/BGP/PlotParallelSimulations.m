@@ -22,13 +22,13 @@ end
   
 
 % LOAD THE COEFF
-LastIter=200;
+LastIter=250;
 load(['Data/c' num2str(LastIter) '.mat'])
 SetParaStruc
 %
 K=6;
 btild0grid=linspace(-1.5,1.5,K);
-NumSim=2000;
+NumSim=5000;
 
 %for ctrb=1:K
 %[sHist(:,ctrb),u2btildHist(:,ctrb),RHist(:,ctrb),TauHist(:,ctrb),YHist(:,ctrb),TransHist(:,ctrb),btildHist(:,ctrb)]=RunSimulations(2,LastIter,btild0grid(ctrb),NumSim,Para);
@@ -39,7 +39,7 @@ load( [Para.datapath 'SimDataParallel.mat'])
  figure()
  for ctrb=1:K
  subplot(3,2,ctrb)
- plot(u2btildHist(:,ctrb))
+ plot(TauHist(:,ctrb))
  end
 
 
