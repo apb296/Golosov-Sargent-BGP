@@ -28,9 +28,9 @@ SetParaStruc
 %
 K=7;
 btild0grid=linspace(-1.5,1.5,K);
-NumSim=2000;
+NumSim=5000;
 
-for ctrb=1:K
+parfor ctrb=1:K
 [sHist(:,ctrb),u2btildHist(:,ctrb),RHist(:,ctrb),TauHist(:,ctrb),YHist(:,ctrb),TransHist(:,ctrb),btildHist(:,ctrb)]=RunSimulations(2,LastIter,btild0grid(ctrb),NumSim,Para);
 end
 save( [Para.datapath 'SimDataParallel.mat'],'sHist','u2btildHist','RHist','TauHist','YHist','TransHist','btildHist','btild0grid')
