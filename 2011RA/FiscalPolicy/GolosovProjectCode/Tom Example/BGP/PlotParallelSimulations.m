@@ -9,7 +9,7 @@ mkdir ('Graphs/LongSimulations/FallingTaxes/');
 mkdir ('Graphs/LongSimulations/RisingTaxes/');
 
 % ---- CHANGE THIS AS PER THE CASE ---
-plotpath='Graphs/LongSimulations/RisingTaxes/';
+plotpath='Graphs/LongSimulations/RisingTaxes';
 % ----
 
 
