@@ -9,7 +9,7 @@ mkdir ('Graphs/LongSimulations/FallingTaxes/');
 mkdir ('Graphs/LongSimulations/RisingTaxes/');
 
 % ---- CHANGE THIS AS PER THE CASE ---
-plotpath='Graphs/LongSimulations/RisingTaxes';
+plotpath='Graphs/LongSimulations/FallingTaxes';
 % ----
 
 
@@ -48,5 +48,40 @@ ylabel('$\tilde{b}_2$','Interpreter','Latex')
 title(['$\tilde{b}_0=$' num2str(btild0grid(ctrb)) ],'Interpreter','Latex')
  end
  print(gcf,'-dpng',[plotpath 'SimulationsBtild_all.png'])
+
+ u2bdiffFineGrid=linspace(min(u2btildHist(:,IndxBenchMark))*1.1,max(u2btildHist(:,IndxBenchMark))*1.1,35);
+ RList=quantile(RHist(:,IndxBenchMark),[.5 .25 .5 .75]);
+ s_=1;
+
  
+LastIter=250;
+load(['Data/c' num2str(LastIter) '.mat'])
+SetParaStruc
+GetTauPolicyPlots(u2bdiffFineGrid,mean(RHist(:,IndxBenchMark)),s_,LastIter,Para)
+
+
+figure()
+plot(btildHist(find(sHist(:,IndxBenchMark)==1),IndxBenchMark) ,TauHist(find(sHist(:,IndxBenchMark)==1),IndxBenchMark))
+hold on
+plot(btildHist(find(sHist(:,IndxBenchMark)==2),IndxBenchMark) ,TauHist(find(sHist(:,IndxBenchMark)==2),IndxBenchMark),'r')
+
+
+
  
+
+
+%  cons(u1btildctr) = PolicyRules(1);
+% end
+
+figure(figFOCRes)
+ subplot(2,2,Rctr)
+ plot(u2bdiffFineGrid, FOCRes,'k')
+ if Rctr==1
+     legend('g_l','g_h')
+ end
+ xlabel('$x$','Interpreter','Latex')
+ ylabel('FOCRes','Interpreter','Latex')
+ title(['$R=$' num2str(RList(Rctr))])
+
+
+
