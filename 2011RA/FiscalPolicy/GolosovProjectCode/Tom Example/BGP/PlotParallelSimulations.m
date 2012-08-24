@@ -3,13 +3,14 @@
 
 close all
 clear all
+clc
 
 load( 'Data/SimDataParallel.mat')
 mkdir ('Graphs/LongSimulations/FallingTaxes/');
 mkdir ('Graphs/LongSimulations/RisingTaxes/');
 
 % ---- CHANGE THIS AS PER THE CASE ---
-plotpath='Graphs/LongSimulations/RisingTaxes';
+plotpath='Graphs/LongSimulations/FallingTaxes';
 % ----
 
 
@@ -48,5 +49,60 @@ ylabel('$\tilde{b}_2$','Interpreter','Latex')
 title(['$\tilde{b}_0=$' num2str(btild0grid(ctrb)) ],'Interpreter','Latex')
  end
  print(gcf,'-dpng',[plotpath 'SimulationsBtild_all.png'])
+
+ u2bdiffFineGrid=linspace(min(u2btildHist(:,IndxBenchMark))*1.1,max(u2btildHist(:,IndxBenchMark))*1.1,35);
+ RList=quantile(RHist(:,IndxBenchMark),[.5 .25 .5 .75]);
+ s_=1;
+
+LastIter=250;
+load(['Data/c' num2str(LastIter) '.mat'])
+SetParaStruc
+GetTauPolicyPlots(u2bdiffFineGrid,mean(RHist(:,IndxBenchMark)),s_,LastIter,Para)
+print(gcf,'-dpng',[plotpath 'Taxes_Transfers_Policy.png'])
+
+
+figure()
+plot(btildHist(find(sHist(:,IndxBenchMark)==1),IndxBenchMark) ,TauHist(find(sHist(:,IndxBenchMark)==1),IndxBenchMark))
+hold on
+plot(btildHist(find(sHist(:,IndxBenchMark)==2),IndxBenchMark) ,TauHist(find(sHist(:,IndxBenchMark)==2),IndxBenchMark),'r')
+T=100;
+
+ figure()
+subplot(2,1,1)
+    X.Data=TauHist(end-T+1:end);
+    X.sHist=sHist(end-T+1:end);
+    X.name={'$\tau$'};  
+    PlotSimul(X,1);
+    title('Labor Taxes - Last 100 periods')
+subplot(2,1,2)
  
+    T=100;
+    X.Data=TauHist(2:T+1);
+    X.sHist=sHist(2:T+1);
+    X.name={'$\tau$'};  
+    PlotSimul(X,1);
+        title('Labor Taxes - First 100 periods')
+    print(gcf,'-dpng',[plotpath 'Simulation_TauTrunc.png'])
+
+    
+    figure()
+subplot(2,1,1)
+    X.Data=TransHist(end-T+1:end);
+    X.sHist=sHist(end-T+1:end);
+    X.name={'$T$'};  
+    PlotSimul(X,1);
+    title('Transfers - Last 100 periods')
+subplot(2,1,2)
  
+    T=100;
+    X.Data=TransHist(2:T+1);
+    X.sHist=sHist(2:T+1);
+    X.name={'$\tau$'};  
+    PlotSimul(X,1);
+        title('Transfers - First100 periods')
+    print(gcf,'-dpng',[plotpath 'Simulation_TransTrunc.png'])
+
+
+    
+    
+   
