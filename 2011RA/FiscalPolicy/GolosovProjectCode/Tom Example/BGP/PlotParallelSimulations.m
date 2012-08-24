@@ -69,7 +69,6 @@ subplot(2,1,1)
     title('Labor Taxes - Last 100 periods')
 subplot(2,1,2)
  
-    T=100;
     X.Data=TauHist(2:T+1);
     X.sHist=sHist(2:T+1);
     X.name={'$\tau$'};  
@@ -82,15 +81,15 @@ subplot(2,1,2)
 subplot(2,1,1)
     X.Data=TransHist(end-T+1:end);
     X.sHist=sHist(end-T+1:end);
-    X.name={'$T$'};  
+    X.name={'T'};  
     PlotSimul(X,1);
     title('Transfers - Last 100 periods')
 subplot(2,1,2)
  
-    T=100;
+ 
     X.Data=TransHist(2:T+1);
     X.sHist=sHist(2:T+1);
-    X.name={'$\tau$'};  
+    X.name={'T'};  
     PlotSimul(X,1);
         title('Transfers - First100 periods')
     print(gcf,'-dpng',[plotpath 'Simulation_TransTrunc.png'])
@@ -101,8 +100,7 @@ oldplotpath=plotpath;
 LastIter=250;
 load(['Data/c' num2str(LastIter) '.mat'])
 SetParaStruc
-GetTauPolicyPlots(u2bdiffFineGrid,mean(RHist(:,IndxBenchMark)),s_,LastIter,Para)
-print(gcf,'-dpng',[oldplotpath 'Taxes_Transfers_Policy.png'])
+GetTauPolicyPlots(u2bdiffFineGrid,mean(RHist(:,IndxBenchMark)),s_,LastIter,Para,oldplotpath)
    
     
    
