@@ -10,7 +10,7 @@ mkdir ('Graphs/LongSimulations/FallingTaxes/');
 mkdir ('Graphs/LongSimulations/RisingTaxes/');
 
 % ---- CHANGE THIS AS PER THE CASE ---
-plotpath='Graphs/LongSimulations/FallingTaxes';
+plotpath='Graphs/LongSimulations/FallingTaxes/';
 % ----
 
 
@@ -52,13 +52,6 @@ title(['$\tilde{b}_0=$' num2str(btild0grid(ctrb)) ],'Interpreter','Latex')
 
  u2bdiffFineGrid=linspace(min(u2btildHist(:,IndxBenchMark))*1.1,max(u2btildHist(:,IndxBenchMark))*1.1,35);
  RList=quantile(RHist(:,IndxBenchMark),[.5 .25 .5 .75]);
- s_=1;
-
-LastIter=250;
-load(['Data/c' num2str(LastIter) '.mat'])
-SetParaStruc
-GetTauPolicyPlots(u2bdiffFineGrid,mean(RHist(:,IndxBenchMark)),s_,LastIter,Para)
-print(gcf,'-dpng',[plotpath 'Taxes_Transfers_Policy.png'])
 
 
 figure()
@@ -103,6 +96,13 @@ subplot(2,1,2)
     print(gcf,'-dpng',[plotpath 'Simulation_TransTrunc.png'])
 
 
-    
+  s_=1;
+oldplotpath=plotpath;
+LastIter=250;
+load(['Data/c' num2str(LastIter) '.mat'])
+SetParaStruc
+GetTauPolicyPlots(u2bdiffFineGrid,mean(RHist(:,IndxBenchMark)),s_,LastIter,Para)
+print(gcf,'-dpng',[oldplotpath 'Taxes_Transfers_Policy.png'])
+   
     
    
