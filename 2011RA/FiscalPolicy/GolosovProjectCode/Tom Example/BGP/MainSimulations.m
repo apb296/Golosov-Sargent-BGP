@@ -31,7 +31,7 @@ SetParaStruc
 K=3;
 
 btild0grid=linspace(-1,1,K);
-NumSim=110;
+NumSim=6000;
 
 parfor ctrb=1:K
 [sHist(:,ctrb),gHist(:,ctrb),u2btildHist(:,ctrb),RHist(:,ctrb),TauHist(:,ctrb),YHist(:,ctrb),TransHist(:,ctrb),btildHist(:,ctrb),c1Hist(:,ctrb),c2Hist(:,ctrb),l1Hist(:,ctrb),l2Hist(:,ctrb),IntHist(:,ctrb),IncomeFromAssets_Agent1Hist(:,ctrb),AfterTaxWageIncome_Agent1Hist(:,ctrb),AfterTaxWageIncome_Agent2Hist(:,ctrb)]=RunSimulations(LastIter,btild0grid(ctrb),NumSim,Para);
