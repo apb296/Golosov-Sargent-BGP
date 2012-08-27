@@ -99,29 +99,29 @@ matrix2latex(Moments, [texpath 'SimulationMoments.tex'] , 'rowLabels', rowLabels
 
 
 figure()
-subplot(2,1,1)
+subplot(3,1,1)
 plot(AfterTaxWageIncome_Agent1Hist(2:end,IndxBenchMark))
 xlabel('t')
 ylabel('$(1-\tau)\theta_1 l_1+T$','Interpreter','Latex')
 title('After Tax income (Agent1)')
-subplot(2,1,2)
+subplot(3,1,2)
 plot(AfterTaxWageIncome_Agent2Hist(2:end,IndxBenchMark))
 xlabel('t')
 ylabel('$(1-\tau)\theta_2 l_2+T$','Interpreter','Latex')
 title('After Tax income (Agent2)')
-print(gcf,'-dpng',[plotpath 'SimulationsAfterTaxIncome.png'])
-figure()
-subplot(2,1,1)
+
+subplot(3,1,3)
 plot(IncomeFromAssets_Agent1Hist(1:end,IndxBenchMark))
 xlabel('t')
 ylabel('$-\tilde{b}_2R(s\_,s)$','Interpreter','Latex')
 title('Income from Assets (Agent1)')
-subplot(2,1,2)
-plot(IntHist(1:end,IndxBenchMark))
-xlabel('t')
+print(gcf,'-dpng',[plotpath 'SimulationsIncome.png'])
+
+figure()
+hist(IntHist(1:end,IndxBenchMark))
 ylabel('$R$','Interpreter','Latex')
 title('Interest Rates')
-print(gcf,'-dpng',[plotpath 'SimulationsInterestIncome.png'])
+print(gcf,'-dpng',[plotpath 'SimulationsInterest.png'])
 
 
 figure()
@@ -209,28 +209,31 @@ subplot(2,1,2)
     subplot(2,2,1)
     X.Data=AfterTaxWageIncome_Agent1Hist(2:T,IndxBenchMark);
     X.sHist=sHist(2:T,IndxBenchMark);
-    X.name={'After-tax income (Agent 1)'};  
+  X.name={'I_1'};  
     PlotSimul(X,1);
-      title(X.name)
-
+    title('After-tax income (Agent 1)')
+    
      subplot(2,2,2)
     X.Data=AfterTaxWageIncome_Agent2Hist(2:T,IndxBenchMark);
     X.sHist=sHist(2:T,IndxBenchMark);
-    X.name={'After-tax income (Agent 2)'};  
+  X.name={'I_2'};  
     PlotSimul(X,1);
-    title(X.name)
-     subplot(2,2,3)
+    title('After-tax income (Agent 2)')
+    
+    subplot(2,2,3)
     X.Data=IncomeFromAssets_Agent1Hist(1:T-1,IndxBenchMark);
     X.sHist=sHist(1:T-1,IndxBenchMark);
-    X.name={'Income from Assets (Agent 1)'};  
+    X.name={'I_1_b'};  
     PlotSimul(X,1);
-    title(X.name)
+    title('Income from assets (Agent 1)')
+   
      subplot(2,2,4)
     X.Data=IntHist(1:T-1,IndxBenchMark);
     X.sHist=sHist(1:T-1,IndxBenchMark);
-    X.name={'Income from Assets (Agent 1)'};  
+      X.name={'R'};  
     PlotSimul(X,1);
-    title(X.name)
+    title('Int rates')
+    
        print(gcf,'-dpng',[plotpath 'Simulation_IncomeTrunc.png'])
        
    % B. Last 100 periods
@@ -238,27 +241,31 @@ subplot(2,1,2)
     subplot(2,2,1)
     X.Data=AfterTaxWageIncome_Agent1Hist(end-T:end,IndxBenchMark);
     X.sHist=sHist(end-T:end,IndxBenchMark);
-    X.name={'After-tax income (Agent 1)'};  
+     X.name={'I_1'};  
     PlotSimul(X,1);
-    title(X.name)
+    title('After-tax income (Agent 1)')
+    
      subplot(2,2,2)
     X.Data=AfterTaxWageIncome_Agent2Hist(end-T:end,IndxBenchMark);
     X.sHist=sHist(end-T:end,IndxBenchMark);
-    X.name={'After-tax income (Agent 2)'};  
+    X.name={'I_2'};  
     PlotSimul(X,1);
-     subplot(2,2,3)
-     title(X.name)
+    title('After-tax income (Agent 2)')
+     
+    subplot(2,2,3) 
     X.Data=IncomeFromAssets_Agent1Hist(end-T:end,IndxBenchMark);
     X.sHist=sHist(end-T:end,IndxBenchMark);
-    X.name={'Income from Assets (Agent 1)'};  
+   X.name={'I_1_b'};  
     PlotSimul(X,1);
-    title(X.name)
+    title('Income from assets (Agent 1)')
+    
      subplot(2,2,4)
     X.Data=IntHist(end-T:end,IndxBenchMark);
     X.sHist=sHist(end-T:end,IndxBenchMark);
-    X.name={'Income from Assets (Agent 1)'};  
+    X.name={'R'};  
     PlotSimul(X,1);
-    title(X.name)
+    title('Int rates')
+    
        print(gcf,'-dpng',[plotpath 'Simulation_IncomeTrunc_b.png'])
 
 
