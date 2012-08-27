@@ -22,20 +22,21 @@ end
   
 
 % LOAD THE COEFF
-LastIter=300;
+LastIter=250;
 load(['Data/c' num2str(LastIter) '.mat'])
 SetParaStruc
 %
 
 
-K=7;
+K=3;
 
-btild0grid=linspace(-1.5,1.5,K);
-NumSim=5000;
+btild0grid=linspace(-1,1,K);
+NumSim=110;
 
 parfor ctrb=1:K
-[sHist(:,ctrb),u2btildHist(:,ctrb),RHist(:,ctrb),TauHist(:,ctrb),YHist(:,ctrb),TransHist(:,ctrb),btildHist(:,ctrb)]=RunSimulations(2,LastIter,btild0grid(ctrb),NumSim,Para);
+[sHist(:,ctrb),gHist(:,ctrb),u2btildHist(:,ctrb),RHist(:,ctrb),TauHist(:,ctrb),YHist(:,ctrb),TransHist(:,ctrb),btildHist(:,ctrb),c1Hist(:,ctrb),c2Hist(:,ctrb),l1Hist(:,ctrb),l2Hist(:,ctrb),IntHist(:,ctrb),IncomeFromAssets_Agent1Hist(:,ctrb),AfterTaxWageIncome_Agent1Hist(:,ctrb),AfterTaxWageIncome_Agent2Hist(:,ctrb)]=RunSimulations(LastIter,btild0grid(ctrb),NumSim,Para);
 end
-save( [Para.datapath 'SimDataParallel.mat'],'sHist','u2btildHist','RHist','TauHist','YHist','TransHist','btildHist','btild0grid')
+
+save( [Para.datapath 'SimDataParallel.mat'],'sHist','gHist','u2btildHist','RHist','TauHist','YHist','TransHist','btildHist','btild0grid','c1Hist','c2Hist','l1Hist','l2Hist','Para','IntHist','AfterTaxWageIncome_Agent1Hist','AfterTaxWageIncome_Agent2Hist','IncomeFromAssets_Agent1Hist')
 
 
