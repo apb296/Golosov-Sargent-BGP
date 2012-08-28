@@ -1,4 +1,4 @@
-function MainBellman(Para,StartIter)
+function MainBellman(Para,InitData)
 close all;
 % This is the main file for computing the minimally stochastic case for BGP
 % preferences
@@ -11,9 +11,18 @@ close all
 %%
 % This script sets up the para structure and records a tex table with the
 % parameters
-if nargin==0
-    SetParaStruc
+switch nargin
+    case 0 % No arguments
+        SetParaStruc % set Para
+        flagComputeInitCoeff='yes';
+    case 1 % given Para
+        flagComputeInitCoeff='yes';
+    case 2 % given para and data for initialization
+        flagComputeInitCoeff='no';
+        cInit=InitData.c;
+        VInit=InitData.V;
 end
+
 
 %% Compute the undistorted FB
 s_=1;
@@ -27,14 +36,54 @@ btild_1=0;
 Para.btild_1=btild_1;
 %% Build Grid for the state variables
 % This setups up the functional space and the grid.
-BuildGrid
+u2btildMin=-(Para.theta_1-Para.theta_2)/(1-Para.beta)*(1/(Para.n1*Para.theta_1+Para.n2*Para.theta_2-Para.g(1)));
+u2btildMin=u2btildMin/3.2;
+%u2btildMin=-(Para.beta/(1-Para.beta))*(max(Para.g)/(1-max(Para.g)))*(Para.psi/(c1FB))*2;
+u2btildMax=-u2btildMin;
+u2btildGrid=linspace(u2btildMin,u2btildMax,Para.u2btildGridSize);
+%u2btildGrid=horzcat(u2btildGrid,linspace(u2btildMax/2*1.02,u2btildMax,u2btildGridSize/2));
+
+Para.u2bdiffGrid=u2btildGrid;
+Para.u2btildLL=u2btildMin;
+Para.u2btildUL=u2btildMax;
+Rbar0=1;
+for u2btild_ind=1:Para.u2btildGridSize
+  findR=@(R) getValueC1(u2btildGrid(u2btild_ind),R,s_,Para);
+  Rbar(u2btild_ind)=fzero(findR,Rbar0);
+  Rbar0=Rbar(u2btild_ind);
+end
+scatter(Rbar,u2btildGrid)
+
+% R=u_2/u_1 = c1/c2
+RMin=max(Rbar)*1.05;
+%RMax=max(Rbar)*1.5;
+RMax=max(Rbar)*1.9;
+RGrid=linspace(RMin,RMax,Para.RGridSize);
+
+Para.RGrid=RGrid;
+GridSize=Para.u2btildGridSize*Para.RGridSize*Para.sSize;
+Para.GridSize=GridSize;
+Para.u2btildMin=u2btildMin;
+Para.u2btildMax=u2btildMax;
+Para.RMax=RMax;
+Para.RMin=RMin;
+%% Define the funtional space
+
+%V(1) = fundefn('cheb',[OrderOfAppx_u2btild OrderOfApprx_R ] ,[u2btildMin RMin],[u2btildMax RMax]);
+V(1) = fundefn(Para.ApproxMethod,[Para.OrderOfAppx_u2btild Para.OrderOfApprx_R ] ,[u2btildMin RMin],[u2btildMax RMax]);
+V(2) = V(1);
+
+GridPoints=[Para.u2btildLL Para.u2btildUL;RMin RMax];
+rowLabels = {'$x$','$R$'};
+columnLabels = {'Lower Bound','Upper Bounds'};
+matrix2latex(GridPoints, [Para.texpath 'GridPoints.tex'] , 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny');
 %%
 disp(RGrid)
 disp(u2btildGrid)
 %% Set the Parallel Config
 err=[];
 try
-    matlabpool
+    matlabpool('size')
 catch err
 end
 if isempty(err)
@@ -89,6 +138,9 @@ end
                     l1_= 1-FF*(1-l2_);
                     u2btildPrime_=u2btild_;
                     V0(s_,n)=(Para.alpha_1*uBGP(c1_,l1_,Para.psi)+Para.alpha_2*uBGP(c2_,l2_,Para.psi))/(1-Para.beta);
+                    if strcmpi(flagComputeInitCoeff,'no')
+                    V0(s_,n)=funeval(cInit(s_,:)',VInit(s_),[u2btild_,R_]);
+                    end
                     xInit_0(s_,n,:)=[c1_ c2_ l1_ l2_ u2btildPrime_/(Para.psi*c2_^(-1)) R_ u2btildPrime_];
                     n=n+1;
                     %end
@@ -140,14 +192,10 @@ end
         ];
     PolicyRulesStore=vertcat(PolicyRulesStore1,PolicyRulesStore2);
     
-    if nargin==2 && StartIter >1
-        load([Para.datapath 'c' num2str(StartIter) '.mat'])
-    else
-        StartIter=1;
-    end
+   
     % Now we solve for V^1(x,R) using the existing code for the stochastic case
     Para.g
-    for iter=StartIter+1:Para.Niter
+    for iter=2:Para.Niter
         tic
         %disp('Starting Iteration No - ')
         %disp(iter)
@@ -155,9 +203,7 @@ end
         IndxUnSolved=[];
         ExitFlag=[];
         PolicyRulesStoreOld=PolicyRulesStore;
-        %parfor ctr=1:GridSize/2
-        
-        for ctr=1:GridSize/2
+        parfor ctr=1:GridSize/2
             
             u2btild=u2btild_slice(ctr) ;
             R=R_slice(ctr) ;
@@ -224,38 +270,8 @@ end
         %PlotFlagPoints
         %[Tau0,Rprime0,u2btildprime0]=SolveTime0(c,V,1,Para)
         
-        save([ Para.datapath 'c' num2str(iter)] , 'c','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V');
+        
         
     end
-
-
-%    btild_1=Para.btild_1;
-%
-%   disp('Computed V...Now solving V0(btild_1) where btild_1 is')
-% disp(btild_1)
-% % c1 and c2 solve
-%  options=optimset('Display','off');
-% [x,fval,exitflagv0,~,grad] = fminunc(@(x)  getValue0(x, btild_1,1,Para,c,V),[ .5 .5*mean(Para.RGrid)^(-1)],options);
-% if ~(exitflagv0==1)
-%     disp('Optimization failed for V0 once ..trying with fmincon')
-% opts = optimset('Algorithm', 'interior-point', 'Display','off', ...
-%     'GradObj','off','GradConstr','off',...
-%     'MaxIter',1000, ...
-%     'TolX', Para.ctol/10, 'TolFun', Para.ctol, 'TolCon', Para.ctol,'MaxTime',200);
-% lb=[0.001 0.001];
-% ub=[10 10];
-% %[x,fval,exitflagv0,output,lambda]  =fmincon(@(x) getValue0(x, btild_1,1,Para,c,V),[ x ],[],[],[],[],lb,ub,[],opts);
-% [x,fval,exitflagv0,output,lambda]  =fmincon(@(x) getValue0(x, btild_1,1,Para,c,V),[ 1 mean(Para.RGrid)^(-1)],[],[],[],[],lb,ub,[],opts);
-% end
-% c10 = x(1);
-% c20 = x(2);
-% R0=c10/c20;
-% TotalResources=(c10*n1+c20*n2+g(1));
-% FF=R0*theta_2/theta_1;
-% DenL2=n1*theta_1*FF+theta_2*n2;
-% l20=(TotalResources-n1*theta_1+n1*theta_1*FF)/(DenL2);
-% l10= 1-FF*(1-l20);
-% BracketTerm=l20/(1-l20)-(l10/(1-l10))*R0;
-% u2btildprime0=(((1-psi)/(psi))*BracketTerm+btild_1/(beta*psi)+R0-1)*psi;
-% btildprime0=u2btildprime0/(c20^-1*psi) ;
-% Rprime0=c20^(-1)/c10^(-1);
+    
+save([ Para.datapath Para.StoreFileName] , 'c','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V');

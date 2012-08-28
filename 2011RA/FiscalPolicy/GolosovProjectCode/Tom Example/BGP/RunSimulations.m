@@ -1,4 +1,4 @@
-function  [sHist,gHist,u2btildHist,RHist,TauHist,YHist,TransHist,btildHist,c1Hist,c2Hist,l1Hist,l2Hist,IntHist,IncomeFromAssets_Agent1Hist,AfterTaxWageIncome_Agent1Hist,AfterTaxWageIncome_Agent2Hist]=RunSimulations(endIter,btild0,NumSim,Para)
+function  [sHist,gHist,u2btildHist,RHist,TauHist,YHist,TransHist,btildHist,c1Hist,c2Hist,l1Hist,l2Hist,IntHist,IncomeFromAssets_Agent1Hist,AfterTaxWageIncome_Agent1Hist,AfterTaxWageIncome_Agent2Hist]=RunSimulations(CoeffFileNane,btild0,NumSim,Para)
 % This function plots the similation for NumSim periods starting brom
 % btild0 and using coeff from endIter
 close all;
@@ -7,7 +7,7 @@ oldtexpath=Para.texpath;
 oldplotpath=Para.plotpath;
 plotpath=oldplotpath;
 datapath=olddatapath;
-load([datapath 'c' num2str(endIter) '.mat'])
+load(CoeffFileNane)
 disp('Govt Exp')
 g=Para.g
 n1=Para.n1;
