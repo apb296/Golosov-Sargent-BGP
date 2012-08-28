@@ -95,7 +95,7 @@ Moments(8,4)=corr(IntHist(end*BurnSampleRatio:end,IndxBenchMark),gHist(end*BurnS
 
 rowLabels = {'Shock : $g$','Labor Taxes: $\tau$', 'Transfers :$T$','Relative assets  :$\tilde{b}_2$', 'After-tax income (Agent 1)','After-tax income (Agent 2)','Income from assets (Agent 1)','Gross Int. rates'};
 columnLabels = {'Mean','Std','AutoCorr','Corr with g'};
-matrix2latex(Moments, [texpath 'SimulationMoments.tex'] , 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny');
+matrix2latex(Moments, [texpath 'SimulationMoments.tex'] , 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.4f', 'size', 'tiny');
 
 
 figure()
