@@ -1,6 +1,11 @@
-function  [sHist,gHist,u2btildHist,RHist,TauHist,YHist,TransHist,btildHist,c1Hist,c2Hist,l1Hist,l2Hist,IntHist,IncomeFromAssets_Agent1Hist,AfterTaxWageIncome_Agent1Hist,AfterTaxWageIncome_Agent2Hist]=RunSimulations(endIter,btild0,NumSim,Para)
+function  [sHist,gHist,u2btildHist,RHist,TauHist,YHist,TransHist,btildHist,c1Hist,c2Hist,l1Hist,l2Hist,IntHist,IncomeFromAssets_Agent1Hist,AfterTaxWageIncome_Agent1Hist,AfterTaxWageIncome_Agent2Hist]=RunSimulations(endIter,btild0,NumSim,Para,sHist0)
 % This function plots the similation for NumSim periods starting brom
-% btild0 and using coeff from endIter
+% btild0 and using coeff from endIter. If existing draw of s-shocks are to
+% be used..use the argument sHist0
+if nargin==5
+    flagUseExistingShocks='yes';
+    disp('Using existing shocks')
+end
 close all;
 olddatapath=Para.datapath;
 oldtexpath=Para.texpath;
@@ -155,13 +160,18 @@ for i=1:NumSim-1
     AfterTaxWageIncome_Agent1=l1.*ul1./uc1+Trans;
     
     ExitFlag(i)=exitflag;
-    % DRAW THE s' ~ P(s,:)
     
+    
+    % DRAW THE s' ~ P(s,:) if flagUseExistingShocks is set to no
+    if strcmpi(flagUseExistingShocks,'yes')
+    sHist(i+1)=sHist0(i+1);
+    else
     if rand < Para.P(sHist(i),1)
         sHist(i+1)=1;
     else
         
         sHist(i+1)=2;
+    end
     end
     % UPDATE THE SIMULATION HISTORY
     
