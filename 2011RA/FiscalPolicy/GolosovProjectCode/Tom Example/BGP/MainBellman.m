@@ -9,8 +9,10 @@ close all;
 clc
 close all
 %%
-% This script sets up the para structure and records a tex table with the
-% parameters
+%  This sets up the flag which controls how the bellman function is
+%  initialized. if set to no - it uses the data passed by the used in
+%  InitData
+
 switch nargin
     case 0 % No arguments
         SetParaStruc % set Para
@@ -31,17 +33,16 @@ s_=1;
 rowLabels = {'$\frac{g}{y}$','$\frac{\theta_1 l_1}{\theta_2 l_2}$'};
 columnLabels = {'$g_l$','$g_h$'};
 matrix2latex([g_yFB_l g_yFB_h  ; Agent1WageShareFB_l Agent1WageShareFB_h], [Para.texpath 'Moments.tex'] , 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny');
-
 btild_1=0;
 Para.btild_1=btild_1;
+
+
 %% Build Grid for the state variables
 % This setups up the functional space and the grid.
 u2btildMin=-(Para.theta_1-Para.theta_2)/(1-Para.beta)*(1/(Para.n1*Para.theta_1+Para.n2*Para.theta_2-Para.g(1)));
-u2btildMin=u2btildMin/3.2;
-%u2btildMin=-(Para.beta/(1-Para.beta))*(max(Para.g)/(1-max(Para.g)))*(Para.psi/(c1FB))*2;
+u2btildMin=u2btildMin/4;
 u2btildMax=-u2btildMin;
 u2btildGrid=linspace(u2btildMin,u2btildMax,Para.u2btildGridSize);
-%u2btildGrid=horzcat(u2btildGrid,linspace(u2btildMax/2*1.02,u2btildMax,u2btildGridSize/2));
 
 Para.u2bdiffGrid=u2btildGrid;
 Para.u2btildLL=u2btildMin;
@@ -52,12 +53,11 @@ for u2btild_ind=1:Para.u2btildGridSize
   Rbar(u2btild_ind)=fzero(findR,Rbar0);
   Rbar0=Rbar(u2btild_ind);
 end
-scatter(Rbar,u2btildGrid)
+
 
 % R=u_2/u_1 = c1/c2
 RMin=max(Rbar)*1.05;
-%RMax=max(Rbar)*1.5;
-RMax=max(Rbar)*1.9;
+RMax=max(Rbar)*1.8;
 RGrid=linspace(RMin,RMax,Para.RGridSize);
 
 Para.RGrid=RGrid;
@@ -68,18 +68,13 @@ Para.u2btildMax=u2btildMax;
 Para.RMax=RMax;
 Para.RMin=RMin;
 %% Define the funtional space
-
-%V(1) = fundefn('cheb',[OrderOfAppx_u2btild OrderOfApprx_R ] ,[u2btildMin RMin],[u2btildMax RMax]);
 V(1) = fundefn(Para.ApproxMethod,[Para.OrderOfAppx_u2btild Para.OrderOfApprx_R ] ,[u2btildMin RMin],[u2btildMax RMax]);
 V(2) = V(1);
-
 GridPoints=[Para.u2btildLL Para.u2btildUL;RMin RMax];
 rowLabels = {'$x$','$R$'};
 columnLabels = {'Lower Bound','Upper Bounds'};
 matrix2latex(GridPoints, [Para.texpath 'GridPoints.tex'] , 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny');
-%%
-disp(RGrid)
-disp(u2btildGrid)
+
 %% Set the Parallel Config
 err=[];
 try
@@ -97,7 +92,7 @@ if isempty(err)
     
 end
     
-    %% Computing the  V^T and policies
+    %% INITIALIZE THE COEFF
     %  This function computes c1,c2,l1,l2 and the value for an arbitrary x, R.
     % This section solves for V i.e the value function at the end of period 1
     % with g_t=g for all t >1. since the value function is static we need to
@@ -191,14 +186,14 @@ end
         squeeze(xInit_0(2,:,7))' squeeze(xInit_0(2,:,7))' ....
         ];
     PolicyRulesStore=vertcat(PolicyRulesStore1,PolicyRulesStore2);
-    
-   
-    % Now we solve for V^1(x,R) using the existing code for the stochastic case
+   if strcmpi(flagComputeInitCoeff,'no')
+                    PolicyRulesStore=InitData.PolicyRulesStore;
+   end
+    %% ITERATE ON THE VALUE FUNCTION
     Para.g
     for iter=2:Para.Niter
         tic
-        %disp('Starting Iteration No - ')
-        %disp(iter)
+       
         IndxSolved=[];
         IndxUnSolved=[];
         ExitFlag=[];
@@ -218,22 +213,16 @@ end
         
         ExitFlag(GridSize/2+1:GridSize)=ExitFlag(1:GridSize/2);
         VNew(GridSize/2+1:GridSize)=VNew(1:GridSize/2);
-        PolicyRulesStore(GridSize/2+1:GridSize,:)=PolicyRulesStore(1:GridSize/2,:);
-        
-        
-        
-        %sprintf(' Done with the parallel computations...it took %1.2f',toc)
-        %sprintf(' %1.2f  Unresolved so far....',length(find(~(ExitFlag==1))))
-        
-        
-        
+        PolicyRulesStore(GridSize/2+1:GridSize,:)=PolicyRulesStore(1:GridSize/2,:);         
         IndxUnSolved=find(~(ExitFlag==1));
         IndxSolved=find(ExitFlag==1);
+        
+        % --  Rsolve the FOC at points that failed in the first round -----
         if mod(iter,Para.ResolveCtr)==0
-            NumTrials=2;
+            NumTrials=3;
             UnResolvedPoints
             if NumResolved>0
-                Numtrials=3;
+                Numtrials=5;
                 UnResolvedPoints;
             end
         end
@@ -247,12 +236,10 @@ end
         
         
       cNew(1,:)=funfitxy(V(1),x_state(IndxSolved_1,1:2),VNew(IndxSolved_1)' );
-        %tic
-   %     [ cNew(1,:) ] = FitConcaveValueFunction(V(1),VNew(IndxSolved_1)',x_state(IndxSolved_1,1:2));
-        %toc
+       
         
         cNew(2,:)=cNew(1,:);
-        %cNew(2,:)=funfitxy(V(2),x_state(IndxSolved_2,1:2),VNew(IndxSolved_2)' );
+     
         
         % Store the difference
         cdiff(iter,:)=sum(abs(c-cNew))';
@@ -265,11 +252,7 @@ end
         disp(iter)
         
         toc
-        % sprintf(' %1.0f  Unresolved Points',length(IndxUnSolved))
-        
-        %PlotFlagPoints
-        %[Tau0,Rprime0,u2btildprime0]=SolveTime0(c,V,1,Para)
-        
+       
         
         
     end

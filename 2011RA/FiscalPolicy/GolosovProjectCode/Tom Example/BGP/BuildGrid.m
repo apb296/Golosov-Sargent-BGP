@@ -1,5 +1,5 @@
 u2btildMin=-(Para.theta_1-Para.theta_2)/(1-Para.beta)*(1/(Para.n1*Para.theta_1+Para.n2*Para.theta_2-Para.g(1)));
-u2btildMin=u2btildMin/3.2;
+u2btildMin=u2btildMin/4;
 %u2btildMin=-(Para.beta/(1-Para.beta))*(max(Para.g)/(1-max(Para.g)))*(Para.psi/(c1FB))*2;
 u2btildMax=-u2btildMin;
 u2btildGrid=linspace(u2btildMin,u2btildMax,Para.u2btildGridSize);
@@ -19,7 +19,7 @@ scatter(Rbar,u2btildGrid)
 % R=u_2/u_1 = c1/c2
 RMin=max(Rbar)*1.05;
 %RMax=max(Rbar)*1.5;
-RMax=max(Rbar)*1.9;
+RMax=max(Rbar)*1.8;
 RGrid=linspace(RMin,RMax,Para.RGridSize);
 
 Para.RGrid=RGrid;

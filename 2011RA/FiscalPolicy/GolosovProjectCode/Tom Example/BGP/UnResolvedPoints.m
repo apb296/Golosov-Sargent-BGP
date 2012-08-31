@@ -28,16 +28,11 @@ for tr_indx=1:NumTrials
  PolicyRulesInit=PolicyRules;
 end
 
-% if ~(exitflag==1)
-% %% TRY 2
-% [PolicyRulesInit,xref]=GetInitialApproxPolicy([u2btild R,s_],x_state(IndxSolved,:),PolicyRulesStore(IndxSolved,:));
-% [PolicyRules, V_new,exitflag,~]=CheckGradNAG(u2btild,R,s_,c,V,PolicyRulesInit,Para,1);        
-% end
 
 
 
 if ~(exitflag==1)
-%% TRY 3
+%% TRY 2
 xguesss2=[u2btild R,s_].*(1+(sign([u2btild R,s_]-xref)*.05));
 x0=[];
 [PolicyRulesInit,xref]=GetInitialApproxPolicy(xguesss2,x_state(IndxSolved,:),PolicyRulesStore(IndxSolved,:));
@@ -59,15 +54,6 @@ end
         
 end
            
-       
-%     
-%      if (ExitFlag(uns_indx)==1)
-%             disp(':-) Resolved...');
-%             disp(uns_indx);
-%      else
-%          disp(':-( UnResolved...');
-%             disp(uns_indx);
-%      end
 
     IndxSolved=find(ExitFlag==1);
     IndxUnSolved=find(~(ExitFlag==1));

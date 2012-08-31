@@ -16,9 +16,9 @@
      Para.StoreFileName=['c' num2str(theta1Ind) '.mat'];
      CoeffFileName=[Para.datapath Para.StoreFileName];
      %if theta1Ind==1
-     MainBellman(Para)
-     [sHist,gHist,u2btildHist,RHist,TauHist,YHist,TransHist,btildHist,c1Hist,c2Hist,l1Hist,l2Hist,IntHist,IncomeFromAssets_Agent1Hist,AfterTaxWageIncome_Agent1Hist,AfterTaxWageIncome_Agent2Hist]=RunSimulations(CoeffFileNane,0,NumSim,Para)
-     save( [Para.datapath 'SimData.mat'],'sHist','gHist','u2btildHist','RHist','TauHist','YHist','TransHist','btildHist','btild0grid','c1Hist','c2Hist','l1Hist','l2Hist','Para','IntHist','AfterTaxWageIncome_Agent1Hist','AfterTaxWageIncome_Agent2Hist','IncomeFromAssets_Agent1Hist')
+     %MainBellman(Para)
+     %[sHist,gHist,u2btildHist,RHist,TauHist,YHist,TransHist,btildHist,c1Hist,c2Hist,l1Hist,l2Hist,IntHist,IncomeFromAssets_Agent1Hist,AfterTaxWageIncome_Agent1Hist,AfterTaxWageIncome_Agent2Hist]=RunSimulations(CoeffFileNane,0,NumSim,Para)
+     %save( [Para.datapath 'SimData.mat'],'sHist','gHist','u2btildHist','RHist','TauHist','YHist','TransHist','btildHist','btild0grid','c1Hist','c2Hist','l1Hist','l2Hist','Para','IntHist','AfterTaxWageIncome_Agent1Hist','AfterTaxWageIncome_Agent2Hist','IncomeFromAssets_Agent1Hist')
      %else
        %  InitData=load([Para.datapath 'c' num2str(theta1Ind-1) '.mat']);
         %  MainBellman(Para,InitData);
