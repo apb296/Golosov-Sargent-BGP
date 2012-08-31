@@ -33,8 +33,6 @@ s_=1;
 rowLabels = {'$\frac{g}{y}$','$\frac{\theta_1 l_1}{\theta_2 l_2}$'};
 columnLabels = {'$g_l$','$g_h$'};
 matrix2latex([g_yFB_l g_yFB_h  ; Agent1WageShareFB_l Agent1WageShareFB_h], [Para.texpath 'Moments.tex'] , 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny');
-btild_1=0;
-Para.btild_1=btild_1;
 
 
 %% Build Grid for the state variables

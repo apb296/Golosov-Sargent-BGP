@@ -36,6 +36,8 @@ grelax=.95;
 Niter=250;
 ResolveCtr=5;
 NumSim=10000;
+btild_1=0;
+
   
  ApproxMethod='cheb';
   u2btildGridSize=10;
@@ -91,6 +93,8 @@ Para.OrderOfAppx_u2btild= OrderOfAppx_u2btild;
 Para.grelax=grelax;
 Para.ResolveCtr=ResolveCtr;
 Para.NumSim=10000;
+Para.btild_1=btild_1;
+
 % Document the table for caliberations
 rowLabels = {'$\psi$','$\beta$', '$g_{l}$','$g_{h}$'};
 columnLabels = {};
