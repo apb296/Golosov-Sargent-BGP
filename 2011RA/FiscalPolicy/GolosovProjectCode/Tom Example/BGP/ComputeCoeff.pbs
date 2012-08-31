@@ -1,0 +1,26 @@
+### PBS script to run a parallel matlab job 
+### on the cluster
+
+#PBS -l nodes=1:ppn=8,walltime=5:00:00
+#PBS -N Golosov-Sargent-Code
+#PBS -M apb296@nyu.edu
+#PBS -m abe
+#PBS -e localhost:/home/apb296/Golosov-Sargent-BGP/2011RA/FiscalPolicy/GolosovProjectCode/Tom\ Example/BGP/Errors.err
+#PBS -o localhost:/home/apb296/Golosov-Sargent-BGP/2011RA/FiscalPolicy/GolosovProjectCode/Tom\ Example/BGP/Output.out 
+
+source /etc/profile.d/env-modules.sh
+module load git
+module load matlab/R2011a
+module load nag
+
+cd /home/apb296/Golosov-Sargent-BGP/2011RA/FiscalPolicy/GolosovProjectCode/Tom\ Example/BGP
+/share/apps/matlab/R2011a/bin/matlab -nosplash < RunMain.m
+
+### You can add more stuff for the script to do after the job is completed
+
+### E.g. zip up the ResultsDir for easy transfer
+zip -r Results.zip ResultsDir/*.*
+
+exit 0;
+
+
