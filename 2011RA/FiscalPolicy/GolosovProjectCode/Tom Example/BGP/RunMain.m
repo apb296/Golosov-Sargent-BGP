@@ -15,7 +15,7 @@
  % This is the BM case - no change
  
  %  --- SOLVE THE BELLMAN EQUATION --------------------------------------
- Main(Para)
+ MainBellman(Para)
  
  %  --- SIMULATE THE MODEL ----------------------------------------------
  
@@ -49,7 +49,7 @@ Para.alpha_2=alpha_2*Para.n2;
 
  
  %  --- SOLVE THE BELLMAN EQUATION --------------------------------------
- Main(Para)
+ MainBellman(Para)
  
  
  % -------- EXPERIMENT  2 -----------------------------------------------
@@ -69,7 +69,7 @@ NewExpenditureshocksGap= ExpenditureShocksGap*2;
 Para.g(1)=MeanExpenditureShocks-NewExpenditureshocksGap/2;
 Para.g(2)=MeanExpenditureShocks+NewExpenditureshocksGap/2;
  %  --- SOLVE THE BELLMAN EQUATION --------------------------------------
- Main(Para)
+ MainBellman(Para)
 
   %  --- SIMULATE THE MODEL ----------------------------------------------
  
@@ -106,7 +106,7 @@ Output(2)=c1FB*Para.n1+c2FB*Para.n2+Para.g(2);
 AverageOutput=sum(Output)/2;
 NewTheta=fsolve(@(ThetaGuess) ResNewTheta( ThetaGuess,NewThetaSpread, AverageOutput,Para),[Para.theta_1 Para.theta_2]);
  %  --- SOLVE THE BELLMAN EQUATION --------------------------------------
- Main(Para)
+ MainBellman(Para)
  
  
    %  --- SIMULATE THE MODEL ----------------------------------------------
