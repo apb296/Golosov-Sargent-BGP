@@ -12,7 +12,7 @@ end
 
     
 % 1. Paramters describing the preferences
-theta_1=2; % type of Agent 1
+theta_1=3; % type of Agent 1
 theta_2=1; % Type of Agent 2
 psi=.6; % Leisure consumption substitution
 beta=.96 ;% subjective time discount factor;
@@ -20,7 +20,7 @@ n1=.5;
 n2=.5;
 % 2. Technology
 g_l=.15; % Government expenditure in low state s_l
-g_h=.2; % Government expenditure in high state s_h
+g_h=.17; % Government expenditure in high state s_h
 P=[.5 .5;.5 .5]; % Transition Matrix for g shocks
 %P=[.75 .25;.75 .25]; % Transition Matrix for g shocks
 alpha_1=.5;
