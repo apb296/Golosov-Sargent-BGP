@@ -33,8 +33,9 @@ sSize=2; % Dimension of the markov state
 pertub=0.00;
 ctol=1e-7;
 grelax=.95;
-Niter=300;
+Niter=250;
 ResolveCtr=5;
+NumSim=10000;
   
  ApproxMethod='cheb';
   u2btildGridSize=10;
@@ -42,7 +43,7 @@ ResolveCtr=5;
   OrderOfAppx_u2btild=5;
   OrderOfApprx_R=5;
 
-ApproxMethod='spli';
+   ApproxMethod='spli';
   u2btildGridSize=15;
   RGridSize=15;
   OrderOfAppx_u2btild=10;
@@ -89,6 +90,7 @@ Para.OrderOfApprx_R=OrderOfApprx_R;
 Para.OrderOfAppx_u2btild= OrderOfAppx_u2btild;
 Para.grelax=grelax;
 Para.ResolveCtr=ResolveCtr;
+Para.NumSim=10000;
 % Document the table for caliberations
 rowLabels = {'$\psi$','$\beta$', '$g_{l}$','$g_{h}$'};
 columnLabels = {};
