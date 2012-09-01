@@ -29,11 +29,12 @@ save( [Para.datapath 'SimData' casename '.mat'],'sHist','gHist','u2btildHist',..
 'AfterTaxWageIncome_Agent1Hist','AfterTaxWageIncome_Agent2Hist',...
 'IncomeFromAssets_Agent1Hist');
  
- 
+ clear all;
 % -------- EXPERIMENT  1 -----------------------------------------------
 % This setting increases the Pareto weight of Agent 2
 
 % This is the baseline settings
+ SetParaStruc;
  Para.datapath=['Data/CompStats/'];
  mkdir(Para.datapath)
  casename='Pareto';
@@ -56,6 +57,8 @@ Para.alpha_2=alpha_2*Para.n2;
 % This setting introduces a mean preserving spread in g
  
  clear all
+  SetParaStruc;
+
 % This is the baseline settings
  Para.datapath=['Data/CompStats/'];
  mkdir(Para.datapath)
@@ -89,6 +92,7 @@ save( [Para.datapath 'SimData' casename '.mat'],'sHist','gHist','u2btildHist',..
 % This setting introduces a mean preserving spread in theta
 clear all
 % This is the baseline settings
+ SetParaStruc;
  Para.datapath=['Data/CompStats/'];
  mkdir(Para.datapath)
  Para.StoreFileName=['cIneq.mat'];
