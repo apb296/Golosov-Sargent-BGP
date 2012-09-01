@@ -1,10 +1,10 @@
  clc
  clear all
- SetParaStruc;
  
  
 % -------- EXPERIMENT  0 -----------------------------------------------
 % This is the baseline settings
+ SetParaStruc;
  Para.datapath=['Data/CompStats/'];
  mkdir(Para.datapath)
  casename='BM';
