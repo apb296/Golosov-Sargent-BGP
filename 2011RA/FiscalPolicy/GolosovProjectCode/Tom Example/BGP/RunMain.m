@@ -73,7 +73,8 @@ save( [Para.datapath 'SimData' casename '.mat'],'sHist','gHist','u2btildHist',..
 % This is the baseline settings
  Para.datapath=['Data/CompStats/'];
  mkdir(Para.datapath)
- Para.StoreFileName=['cPareto.mat'];
+casename='GVol';
+ Para.StoreFileName=['c' casename '.mat'];
  CoeffFileName=[Para.datapath Para.StoreFileName];
 
  % ---------------CHANGE THE DEAFULT PARAMTERS----------------------------
@@ -107,8 +108,9 @@ clear all
  SetParaStruc;
  Para.datapath=['Data/CompStats/'];
  mkdir(Para.datapath)
- Para.StoreFileName=['cIneq.mat'];
-  CoeffFileName=[Para.datapath Para.StoreFileName];
+ casename='Ineq';
+ Para.StoreFileName=['c' casename '.mat'];
+ CoeffFileName=[Para.datapath Para.StoreFileName];
 
 
  % ---------------CHANGE THE DEAFULT PARAMTERS----------------------------
