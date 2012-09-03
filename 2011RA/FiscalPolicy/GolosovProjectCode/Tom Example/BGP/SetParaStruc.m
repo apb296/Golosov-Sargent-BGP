@@ -12,7 +12,7 @@ end
 
     
 % 1. Paramters describing the preferences
-theta_1=3; % type of Agent 1
+theta_1=2; % type of Agent 1
 theta_2=1; % Type of Agent 2
 psi=.6; % Leisure consumption substitution
 beta=.96 ;% subjective time discount factor;
