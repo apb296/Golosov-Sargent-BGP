@@ -33,7 +33,7 @@
  
  % ---------------CHANGE THE DEAFULT PARAMTERS----------------------------
 alpha_2=.75;
-alpha_1=1-alpha_1;
+alpha_1=1-alpha_2;
 Para.alpha_1=alpha_1*Para.n1;
 Para.alpha_2=alpha_2*Para.n2;
 
@@ -93,6 +93,8 @@ Output(1)=c1FB*Para.n1+c2FB*Para.n2+Para.g(1);
 Output(2)=c1FB*Para.n1+c2FB*Para.n2+Para.g(2);
 AverageOutput=sum(Output)/2;
 NewTheta=fsolve(@(ThetaGuess) ResNewTheta( ThetaGuess,NewThetaSpread, AverageOutput,Para),[Para.theta_1 Para.theta_2]);
+Para.theta_1=NewTheta(1);
+Para.theta_2=NewTheta(2);
  %  --- SOLVE THE BELLMAN EQUATION --------------------------------------
  MainBellman(Para)
  
