@@ -36,10 +36,10 @@ Moments(1,3)=corr(X.data(end*BurnSampleRatio:end,1),X.data(end*BurnSampleRatio-1
 Moments(1,4)=corr(X.data(end*BurnSampleRatio:end,1),gHist(end*BurnSampleRatio:end,1));
 
 
-Moments(2,1) =mean(X.data(end*BurnSampleRatio:end,K));
-Moments(2,2)=std(X.data(end*BurnSampleRatio:end,K));
-Moments(2,3)=corr(X.data(end*BurnSampleRatio:end,K),X.data(end*BurnSampleRatio-1:end-1,1));
-Moments(2,4)=corr(X.data(end*BurnSampleRatio:end,K),gHist(end*BurnSampleRatio:end,1));
+Moments(2,1) =mean(X.data(end*BurnSampleRatio:end,K)); %mean for column K
+Moments(2,2)=std(X.data(end*BurnSampleRatio:end,K)); % std for column K
+Moments(2,3)=corr(X.data(end*BurnSampleRatio:end,K),X.data(end*BurnSampleRatio-1:end-1,K));  % auto corr column K
+Moments(2,4)=corr(X.data(end*BurnSampleRatio:end,K),gHist(end*BurnSampleRatio:end,K)); % corr column K with expenditure shocks
 
 
 rowLabels = {'btild0=0',['btild0=' num2str(btild0grid(K))]};

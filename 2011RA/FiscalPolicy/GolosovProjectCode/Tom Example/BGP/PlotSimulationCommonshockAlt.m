@@ -1,0 +1,47 @@
+function  PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist,plotpath,texpath)
+BurnSampleRatio=.5;% Percentage of simulations to disregard
+
+%%
+%Long Simulations
+figure()
+for i = 1:K
+    subplot(4,1,i)
+    plot(X.data(:,i))
+    xlabel('t')
+    ylabel(X.ylabel,'Interpreter','Latex')
+    title([X.name ' - Long Run Plot of ' SimTitle{i}]);
+end
+print(gcf,'-depsc2 ',[plotpath 'LongSimulations' X.name '.eps'])
+
+%%
+%Short Simulation
+figure()
+for i = 1:K
+    subplot(4,1,i)
+    XX.Data=X.data(end-T+1:end,i);
+    XX.sHist=X.sHist(end-T+1:end,i);
+    XX.name=X.ylabel;  
+    PlotSimul(XX,1);
+    title([X.name ' - Last 100 periods of' SimTitle{i}])
+end
+
+print(gcf,'-depsc2 ',[plotpath 'TruncSimulations' X.name 'Last100.eps'])
+
+%%
+% -- moments -------------------------------------------------------------
+for i = 1:K
+    startIndex = floor(BurnSampleRatio*length(X.data(:,i)));
+Moments(i,1) =mean(X.data(startIndex:end,i));
+Moments(i,2)=std(X.data(startIndex:end,i));
+Moments(i,3)=corr(X.data(startIndex:end,i),X.data(startIndex-1:end-1,i));
+Moments(i,4)=corr(X.data(startIndex:end,i),gHist(startIndex:end,i));
+end
+
+
+rowLabels = SimTitle;
+columnLabels = {'Mean','Std','AutoCorr','Corr with g'};
+matrix2latex(Moments, [texpath X.name 'Moments.tex'] , 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.4f', 'size', 'tiny');
+
+
+
+end
