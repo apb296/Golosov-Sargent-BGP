@@ -86,7 +86,7 @@ clear all
 %thetas so that "first best" undistorted output is the same, 
 %but inequality is higher).
 OldThetaSpread=Para.theta_1-Para.theta_2;
-NewThetaSpread=OldThetaSpread*1.3;
+NewThetaSpread=OldThetaSpread*1.5;
 [c1FB c2FB l1FB l2FB yFB g_yFB_h Agent1WageShareFB_h]=getFB(Para,2);
 Output(1)=c1FB*Para.n1+c2FB*Para.n2+Para.g(1);
 [c1FB c2FB l1FB l2FB yFB g_yFB_l Agent1WageShareFB_l]=getFB(Para,1);
