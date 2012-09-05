@@ -42,7 +42,7 @@ Sol=load(CoeffFileName);
 Param(ctrb)=Sol.Para;
 end
 
-for ctrb=1:K
+parfor ctrb=1:K
   CoeffFileName=['Data/CompStats/c' ex(ctrb).casename '.mat'];
 
 [sHist(:,ctrb),gHist(:,ctrb),u2btildHist(:,ctrb),RHist(:,ctrb),...
