@@ -1,4 +1,9 @@
-function  [sHist,gHist,u2btildHist,RHist,TauHist,YHist,TransHist,btildHist,c1Hist,c2Hist,l1Hist,l2Hist,IntHist,IncomeFromAssets_Agent1Hist,AfterTaxWageIncome_Agent1Hist,AfterTaxWageIncome_Agent2Hist]=RunSimulations(CoeffFileName,btild0,NumSim,Para,sHist0)
+function  [sHist,gHist,u2btildHist,RHist,TauHist,YHist,TransHist,...
+          btildHist,c1Hist,c2Hist,l1Hist,l2Hist,IntHist,...
+          IncomeFromAssets_Agent1Hist,AfterTaxWageIncome_Agent1Hist,...
+          AfterTaxWageIncome_Agent2Hist,GShockDiffHist,TransDiffHist,...
+          LaborTaxAgent1DiffHist,LaborTaxAgent2DiffHist,DebtDiffHist,...
+          GiniCoeffHist]=RunSimulations(CoeffFileName,btild0,NumSim,Para,sHist0)
 % This function plots the similation for NumSim periods starting brom
 % btild0 and using coeff from endIter. If existing draw of s-shocks are to
 % be used..use the argument sHist0
@@ -76,10 +81,17 @@ c2Hist=zeros(NumSim,1);
 l1Hist=zeros(NumSim,1);
 l2Hist=zeros(NumSim,1);
 sHist=zeros(NumSim,1);
+GiniCoeffHist=zeros(NumSim,1);
 IntHist=zeros(NumSim-1,1);
 IncomeFromAssets_Agent1Hist=zeros(NumSim-1,1);
 AfterTaxWageIncome_Agent1Hist=zeros(NumSim,1);
 AfterTaxWageIncome_Agent2Hist=zeros(NumSim,1);
+GShockDiffHist=zeros(NumSim-1,1);
+TransDiffHist=zeros(NumSim-1,1);
+LaborTaxAgent1DiffHist=zeros(NumSim-1,1);
+LaborTaxAgent2DiffHist=zeros(NumSim-1,1);
+DebtDiffHist=zeros(NumSim-1,1);
+
 
 % INITIALIZE - t=0
 u2btildHist(1)=u2btildprime0;
@@ -159,10 +171,13 @@ for i=1:NumSim-1
      % Income
     AfterTaxWageIncome_Agent2=l2.*ul2./uc2+Trans;
     AfterTaxWageIncome_Agent1=l1.*ul1./uc1+Trans;
-    
+    % Gini Coeff
+    GiniCoeff=(AfterTaxWageIncome_Agent2 +2*AfterTaxWageIncome_Agent1)./(AfterTaxWageIncome_Agent2+AfterTaxWageIncome_Agent1)-3/2;
+   
     ExitFlag(i)=exitflag;
     
-    
+   
+   
     % DRAW THE s' ~ P(s,:) if flagUseExistingShocks is set to no
     if strcmpi(flagUseExistingShocks,'yes')
     sHist(i+1)=sHist0(i+1);
@@ -186,10 +201,22 @@ for i=1:NumSim-1
     c2Hist(i+1)=c2(sHist(i+1));
     l1Hist(i+1)=l1(sHist(i+1));
     l2Hist(i+1)=l2(sHist(i+1));
-    IncomeFromAssets_Agent1Hist(i)=-btildHist(i).*IntHist(i);
+    IncomeFromAssets_Agent1Hist(i)=-btildHist(i).*(IntHist(i)-1);
     AfterTaxWageIncome_Agent1Hist(i+1)=AfterTaxWageIncome_Agent1(sHist(i+1));
     AfterTaxWageIncome_Agent2Hist(i+1)=AfterTaxWageIncome_Agent2(sHist(i+1));
     gHist(i+1)=g(sHist(i+1));
+     % Diff in GBC
+    % diff in g_shock
+    GShockDiffHist(i)=g(2)-g(1);
+    % diff in trasnfers
+    TransDiffHist(i)=(Trans(2)-Trans(1));
+    % diff in labortax agent1
+    LaborTaxAgent1DiffHist(i)=theta_1*l1(2)*Tau(2)*n1 - theta_1*l1(1)*Tau(1)*n1;
+    % diff in labortax agent2
+    LaborTaxAgent2DiffHist(i)=theta_2*l2(2)*Tau(2)*n2 - theta_2*l2(1)*Tau(1)*n2;
+      % diff in borrowing
+    DebtDiffHist(i)=n1*(btildprime(2)-btildprime(1));
+    GiniCoeffHist(i+1)=GiniCoeff(sHist(i+1));
     %  if exitflag==1
     %      RHist(n)=Rprime(sHist(i+1));
     %      u2btildHist(n)=u2btildprime(sHist(i+1)) ;
@@ -200,3 +227,10 @@ end
 
 
 end
+
+
+% c1Hist(3:5)-btildHist(3:5)-AfterTaxWageIncome_Agent1Hist(3:5)-IncomeFromAssets_Agent1Hist(2:4)
+% c2Hist(3:5)-AfterTaxWageIncome_Agent2Hist(3:5)
+% YHist(3:5)-n1*c1Hist(3:5)-n2*c2Hist(3:5)-gHist(3:5)
+% YHist(3:5)-n1*l1Hist(3:5)*theta_1-n2*l2Hist(3:5)*theta_2
+% gHist(3:5)+n1*btildHist(3:5)+TransHist(3:5)-TauHist(3:5).*(n1*theta_1*l1Hist(3:5)+n2*theta_2*l2Hist(3:5))-n1*btildHist(2:4).*IntHist(2:4)

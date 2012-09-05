@@ -12,6 +12,7 @@ for i = 1:K
     title([X.name ' - Long Run Plot of ' SimTitle{i}]);
 end
 print(gcf,'-depsc2 ',[plotpath 'LongSimulations' X.name '.eps'])
+print(gcf,'-dpng ',[plotpath 'LongSimulations' X.name '.png'])
 
 %%
 %Short Simulation
@@ -26,6 +27,8 @@ for i = 1:K
 end
 
 print(gcf,'-depsc2 ',[plotpath 'TruncSimulations' X.name 'Last100.eps'])
+print(gcf,'-dpng ',[plotpath 'TruncSimulations' X.name 'Last100.png'])
+
 
 %%
 % -- moments -------------------------------------------------------------
