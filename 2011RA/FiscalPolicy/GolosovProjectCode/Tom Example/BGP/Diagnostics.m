@@ -3,13 +3,14 @@ clear all
 SetParaStruc
 
 clear numsolved
-minIter = 200;
-maxIter = 233;
+minIter = 1;
+maxIter = 119;
 
 load(['Data/c' num2str(maxIter) '.mat'])
 
 theta_1=Para.theta_1;
 theta_2=Para.theta_2;
+Para.Sigma = 
 sigma=Para.sigma;
 gamma=Para.gamma;
 g=Para.g;

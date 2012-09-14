@@ -77,133 +77,133 @@ xInit=[c1_1 c1_2 c2_1 u2btildprime(1) u2btildprime(2) MultiplierGuess];
 % set flagCons to interior solution
 flagCons='ToCheck';
 flagConsOld='SolveKKT';
-
-while  (strcmpi(flagCons,flagConsOld))==0
-    flagConsOld=flagCons;
-    flagCons='Int';
-    
-    % Check the upper limits
-    % if upper limit binds for state 1 only
-    if u2btildprime(1)> u2btildUL && u2btildprime(2)< u2btildUL
-        flagCons='UL_';
-        xInit=[c1_1 c1_2 c2_1 (u2btildprime(1)-u2btildUL) u2btildprime(2) MultiplierGuess];
-        
-    end
-    % if upper limit binds for state 2 only
-    if u2btildprime(1) < u2btildUL && u2btildprime(2)>u2btildUL
-        flagCons='_UL';
-        xInit=[c1_1 c1_2 c2_1 u2btildprime(1)  (u2btildprime(2)-u2btildUL) MultiplierGuess];
-        
-    end
-    % if upper limit binds for both the states
-    if u2btildprime(1)> u2btildUL && u2btildprime(2) > u2btildUL
-        flagCons='ULUL';
-        xInit=[c1_1 c1_2 c2_1 (u2btildprime(1)- u2btildUL) (u2btildprime(2) - u2btildUL) MultiplierGuess];
-        
-    end
-    
-    % Check the lower limits
-    % if lower limit binds for state 1 only
-    if u2btildprime(1)< u2btildLL && u2btildprime(2)> u2btildLL
-        flagCons='LL_';
-        xInit=[c1_1 c1_2 c2_1 (u2btildLL-u2btildprime(1)) u2btildprime(2) MultiplierGuess];
-    end
-    % if lower limit binds for state 2 only
-    if u2btildprime(1) > u2btildLL && u2btildprime(2) <u2btildLL
-        flagCons='_LL';
-        xInit=[c1_1 c1_2 c2_1 u2btildprime(1) (u2btildLL-u2btildprime(2)) MultiplierGuess];
-    end
-    % if lower limit binds for both the states
-    if u2btildprime(1) < u2btildLL && u2btildprime(2) <u2btildLL
-        flagCons='LLLL';
-        xInit=[c1_1 c1_2 c2_1 (u2btildLL-u2btildprime(1)) (u2btildLL-u2btildprime(2)) MultiplierGuess];
-        
-    end
-    
-    if ~(strcmpi(flagCons,'Int'))
-        %% RESOLVE with KKT conditions
-        
-        warning('off', 'NAG:warning')
-        [x, fvec,exitflag]=c05nb('resFOCBGP_alt',xInit);
-        
-        if exitflag==4
-            exitflag=-2;
-            %x=xInit;
-        else
-            exitflag=1;
-        end
-        
-        MuU=zeros(1,2);
-        MuL=zeros(1,2);
-        
-        c1_1=x(1);
-        c1_2=x(2);
-        c2_1=x(3);
-        
-        %compute components from solution
-        [c2_2 grad_c2_2] = computeC2_2(c1_1,c1_2,c2_1,R,s_,P,sigma);
-        [l1 l1grad l2 l2grad] = computeL(c1_1,c1_2,c2_1,c2_2,grad_c2_2,...
-            theta_1,theta_2,g,n1,n2); 
-        % update u2btildprime
-        
-        switch flagCons
-            case 'LL_'
-                % lower limit binds for state 1 only
-                MuL(1)=x(4);
-                MuL(2)=0;
-                u2btildprime(1)=u2btildLL;
-                u2btildprime(2)=x(5);
-                
-            case '_LL'
-                % lower limit binds for state 2 only
-                MuL(1)=0;
-                MuL(2)=x(5);
-                u2btildprime(1)=x(4);
-                u2btildprime(2)=u2btildLL;
-                
-            case 'LLLL'
-                % lower limit binds for both the states
-                MuL(1)=x(4);
-                MuL(2)=x(5);
-                u2btildprime(1)=u2btildLL;
-                u2btildprime(2)=u2btildLL;
-                
-                
-                
-            case 'UL_'
-                % upper limit binds for state 1 only
-                
-                MuU(1)=x(4);
-                MuU(2)=0;
-                u2btildprime(1)=u2btildUL;
-                u2btildprime(2)=x(5);
-                
-                
-            case '_UL'
-                % upper limit binds for state 2 only
-                MuU(1)=0;
-                MuU(2)=x(5);
-                u2btildprime(1)=x(4);
-                u2btildprime(2)=u2btildUL;
-                
-                
-            case 'ULUL'
-                
-                
-                % upper limit binds for both the states
-                MuL(1)=x(4);
-                MuL(2)=x(5);
-                u2btildprime(1)=u2btildUL;
-                u2btildprime(2)=u2btildUL;
-        end
-    end
-    btildprime(1)=u2btildprime(1)/(psi*c2_1^(-1));
-    btildprime(2)=u2btildprime(2)/(psi*c2_2^(-1));
-    X(1,:) = [u2btildprime(1),c2_1^(-1)/c1_1^(-1)];%state next period
-    X(2,:) = [u2btildprime(2),c2_2^(-1)/c1_2^(-1)];%state next period
-    Lambda=x(11:end);
-    
-end
+% 
+% while  (strcmpi(flagCons,flagConsOld))==0
+%     flagConsOld=flagCons;
+%     flagCons='Int';
+%     
+%     % Check the upper limits
+%     % if upper limit binds for state 1 only
+%     if u2btildprime(1)> u2btildUL && u2btildprime(2)< u2btildUL
+%         flagCons='UL_';
+%         xInit=[c1_1 c1_2 c2_1 (u2btildprime(1)-u2btildUL) u2btildprime(2) MultiplierGuess];
+%         
+%     end
+%     % if upper limit binds for state 2 only
+%     if u2btildprime(1) < u2btildUL && u2btildprime(2)>u2btildUL
+%         flagCons='_UL';
+%         xInit=[c1_1 c1_2 c2_1 u2btildprime(1)  (u2btildprime(2)-u2btildUL) MultiplierGuess];
+%         
+%     end
+%     % if upper limit binds for both the states
+%     if u2btildprime(1)> u2btildUL && u2btildprime(2) > u2btildUL
+%         flagCons='ULUL';
+%         xInit=[c1_1 c1_2 c2_1 (u2btildprime(1)- u2btildUL) (u2btildprime(2) - u2btildUL) MultiplierGuess];
+%         
+%     end
+%     
+%     % Check the lower limits
+%     % if lower limit binds for state 1 only
+%     if u2btildprime(1)< u2btildLL && u2btildprime(2)> u2btildLL
+%         flagCons='LL_';
+%         xInit=[c1_1 c1_2 c2_1 (u2btildLL-u2btildprime(1)) u2btildprime(2) MultiplierGuess];
+%     end
+%     % if lower limit binds for state 2 only
+%     if u2btildprime(1) > u2btildLL && u2btildprime(2) <u2btildLL
+%         flagCons='_LL';
+%         xInit=[c1_1 c1_2 c2_1 u2btildprime(1) (u2btildLL-u2btildprime(2)) MultiplierGuess];
+%     end
+%     % if lower limit binds for both the states
+%     if u2btildprime(1) < u2btildLL && u2btildprime(2) <u2btildLL
+%         flagCons='LLLL';
+%         xInit=[c1_1 c1_2 c2_1 (u2btildLL-u2btildprime(1)) (u2btildLL-u2btildprime(2)) MultiplierGuess];
+%         
+%     end
+%     
+%     if ~(strcmpi(flagCons,'Int'))
+%         %% RESOLVE with KKT conditions
+%         
+%         warning('off', 'NAG:warning')
+%         [x, fvec,exitflag]=c05nb('resFOCBGP_alt',xInit);
+%         
+%         if exitflag==4
+%             exitflag=-2;
+%             %x=xInit;
+%         else
+%             exitflag=1;
+%         end
+%         
+%         MuU=zeros(1,2);
+%         MuL=zeros(1,2);
+%         
+%         c1_1=x(1);
+%         c1_2=x(2);
+%         c2_1=x(3);
+%         
+%         %compute components from solution
+%         [c2_2 grad_c2_2] = computeC2_2(c1_1,c1_2,c2_1,R,s_,P,sigma);
+%         [l1 l1grad l2 l2grad] = computeL(c1_1,c1_2,c2_1,c2_2,grad_c2_2,...
+%             theta_1,theta_2,g,n1,n2); 
+%         % update u2btildprime
+%         
+%         switch flagCons
+%             case 'LL_'
+%                 % lower limit binds for state 1 only
+%                 MuL(1)=x(4);
+%                 MuL(2)=0;
+%                 u2btildprime(1)=u2btildLL;
+%                 u2btildprime(2)=x(5);
+%                 
+%             case '_LL'
+%                 % lower limit binds for state 2 only
+%                 MuL(1)=0;
+%                 MuL(2)=x(5);
+%                 u2btildprime(1)=x(4);
+%                 u2btildprime(2)=u2btildLL;
+%                 
+%             case 'LLLL'
+%                 % lower limit binds for both the states
+%                 MuL(1)=x(4);
+%                 MuL(2)=x(5);
+%                 u2btildprime(1)=u2btildLL;
+%                 u2btildprime(2)=u2btildLL;
+%                 
+%                 
+%                 
+%             case 'UL_'
+%                 % upper limit binds for state 1 only
+%                 
+%                 MuU(1)=x(4);
+%                 MuU(2)=0;
+%                 u2btildprime(1)=u2btildUL;
+%                 u2btildprime(2)=x(5);
+%                 
+%                 
+%             case '_UL'
+%                 % upper limit binds for state 2 only
+%                 MuU(1)=0;
+%                 MuU(2)=x(5);
+%                 u2btildprime(1)=x(4);
+%                 u2btildprime(2)=u2btildUL;
+%                 
+%                 
+%             case 'ULUL'
+%                 
+%                 
+%                 % upper limit binds for both the states
+%                 MuL(1)=x(4);
+%                 MuL(2)=x(5);
+%                 u2btildprime(1)=u2btildUL;
+%                 u2btildprime(2)=u2btildUL;
+%         end
+%     end
+%     btildprime(1)=u2btildprime(1)/(psi*c2_1^(-1));
+%     btildprime(2)=u2btildprime(2)/(psi*c2_2^(-1));
+%     X(1,:) = [u2btildprime(1),c2_1^(-1)/c1_1^(-1)];%state next period
+%     X(2,:) = [u2btildprime(2),c2_2^(-1)/c1_2^(-1)];%state next period
+%     Lambda=x(11:end);
+%     
+% end
 
 
 
