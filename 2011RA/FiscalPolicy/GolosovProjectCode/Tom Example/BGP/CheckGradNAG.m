@@ -21,6 +21,8 @@ u2btildUL=Para.u2btildUL;
 n1=Para.n1;
 n2=Para.n2;
 ctol=Para.ctol;
+epsilon = Para.epsilon;
+k_a = Para.k_a;
 
 %% Now solve the unconstraint problem FOC using NAG
 % use the last solution
@@ -214,9 +216,11 @@ if ~isreal(X)
     X=real(X);
 end
 Vobj = P(s_,1)*(alpha(1)*uBGP(c1_1,l1(1),psi)+alpha(2)*uBGP(c2_1,l2(1),psi)...
+    -(1/k_a)*epsilon*btildprime(1)^k_a ...
     +beta*funeval(Vcoef{1},V(1),X(1,:)));
 
 Vobj = Vobj + P(s_,2)*(alpha(1)*uBGP(c1_2,l1(2),psi)+alpha(2)*uBGP(c2_2,l2(2),psi)...
+    -(1/k_a)*epsilon*btildprime(2)^k_a ...
     +beta*funeval(Vcoef{2},V(2),X(2,:)));
 
 V_new=Vobj;

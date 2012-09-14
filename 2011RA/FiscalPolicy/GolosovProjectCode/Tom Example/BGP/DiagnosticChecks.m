@@ -10,7 +10,7 @@ clear all
 
 
 % LOAD THE COEFF
-LastIter=250;
+LastIter=30;
 load(['Data/c' num2str(LastIter) '.mat'])
 SetParaStruc
 GetPlots(2,LastIter,Para)
