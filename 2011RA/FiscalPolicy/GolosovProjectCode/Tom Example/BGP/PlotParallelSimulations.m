@@ -267,7 +267,7 @@ subplot(2,1,2)
 
   s_=1;
 oldplotpath=plotpath;
-LastIter=250;
+LastIter=500;
 load(['Data/c' num2str(LastIter) '.mat'])
 SetParaStruc
 GetTauPolicyPlots(u2bdiffFineGrid,mean(RHist(:,IndxBenchMark)),s_,LastIter,Para,oldplotpath)
