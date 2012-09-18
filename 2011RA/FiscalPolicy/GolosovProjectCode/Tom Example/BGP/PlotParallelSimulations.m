@@ -6,14 +6,14 @@ clear all
 clc
 
 load( 'Data/SimDataParallel.mat')
-mkdir ('Graphs/LongSimulations/FallingTaxes/');
-mkdir ('Tex/LongSimulations/FallingTaxes/');
-mkdir ('Graphs/LongSimulations/RisingTaxes/');
-mkdir ('Tex/LongSimulations/RisingTaxes/');
+mkdir ('Graphs/test/FallingTaxes/');
+mkdir ('Tex/test/FallingTaxes/');
+mkdir ('Graphs/test/RisingTaxes/');
+mkdir ('Tex/test/RisingTaxes/');
 
 % ---- CHANGE THIS AS PER THE CASE ---
-plotpath='Graphs/LongSimulations/FallingTaxes/';
-texpath='Tex/LongSimulations/FallingTaxes/';
+plotpath='Graphs/test/FallingTaxes/';
+texpath='Tex/test/FallingTaxes/';
 % ----
 
 

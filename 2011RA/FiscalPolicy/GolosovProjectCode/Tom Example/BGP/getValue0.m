@@ -10,6 +10,8 @@ theta_1=Para.theta_1;
 theta_2=Para.theta_2;
 psi=Para.psi;
 beta=Para.beta;
+k_a = Para.k_a;
+epsilon = Para.epsilon
 c1 = x(1);
 c2 = x(2);
 if min(x)>0
@@ -26,7 +28,8 @@ BracketTerm=l2/(1-l2)-(l1/(1-l1))*R;
 u2btildprime=(((1-psi)/(psi))*BracketTerm+btild/(beta*psi)+R-1)*psi; % <CHECK THIS>
 btildprime=u2btildprime/(c2^-1*psi) ;
 Rprime=c2^(-1)/c1^(-1);
-v=alpha_1*uBGP(c1,l1,psi)+alpha_2*uBGP(c2,l2,psi)+beta*funeval(c(1,:)',V(1),[u2btildprime Rprime]);
+v=alpha_1*uBGP(c1,l1,psi)+alpha_2*uBGP(c2,l2,psi)-(1/k_a)*epsilon*btildprime^(k_a)...
+    +beta*funeval(c(1,:)',V(1),[u2btildprime Rprime]);
 v=-v;
 else
     v=(max(abs(x)))*100+10;
