@@ -31,7 +31,7 @@ SetParaStruc
 
 K=3;
 
-btild0grid=linspace(-1,1,K);
+btild0grid=linspace(-0.5,.5,K);
 NumSim=10000;
 
 sHist0 = randi(2,NumSim,K);

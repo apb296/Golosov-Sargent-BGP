@@ -11,7 +11,7 @@ theta_2=Para.theta_2;
 psi=Para.psi;
 beta=Para.beta;
 k_a = Para.k_a;
-epsilon = Para.epsilon
+epsilon = Para.epsilon;
 c1 = x(1);
 c2 = x(2);
 if min(x)>0

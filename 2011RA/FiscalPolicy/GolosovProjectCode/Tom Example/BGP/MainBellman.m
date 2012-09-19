@@ -41,6 +41,8 @@ u2btildMin=-(Para.theta_1-Para.theta_2)/(1-Para.beta)*(1/(Para.n1*Para.theta_1+P
 u2btildMin=u2btildMin/8;
 u2btildMax=-u2btildMin
 u2btildMin = u2btildMin*1.2
+u2btildMin = -2;
+u2btildMax = 1;
 u2btildGrid=linspace(u2btildMin,u2btildMax,Para.u2btildGridSize);
 
 Para.u2bdiffGrid=u2btildGrid;
@@ -55,8 +57,9 @@ end
 
 
 % R=u_2/u_1 = c1/c2
-RMin=max(Rbar)*1.05
-RMax= 2; %max(Rbar)*1.5;
+RMin=max(Rbar)*1.05;
+RMin = 2.5;
+RMax= 4.5; %max(Rbar)*1.5;
 RGrid=linspace(RMin,RMax,Para.RGridSize);
 
 Para.RGrid=RGrid;
