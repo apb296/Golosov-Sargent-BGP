@@ -1,24 +1,22 @@
+function PlotParallelSimulationsCommonShocks(SimDataPath,SimTexPath,SimPlotPath,SimTitle)
+
 % This script plots the long simulation using data stored in
 % Data/SimDataParallel.mat file. 
 
-close all
-clear all
-clc
 
-load( 'Data/SimDataParallelCommonShocks.mat')
-mkdir ('Graphs/LongSimulations/ComparativeStatics/CommonShocks');
-mkdir ('Tex/LongSimulations/ComparativeStatics/CommonShocks');
+load( SimDataPath);
 
-% ---- CHANGE THIS AS PER THE CASE ---
-plotpath='Graphs/LongSimulations/ComparativeStatics/CommonShocks/';
-texpath='Tex/LongSimulations/ComparativeStatics/CommonShocks/';
-% ----
+mkdir(SimPlotPath)
+plotpath=SimPlotPath;
+mkdir(SimTexPath)
+texpath=SimTexPath;
+
 
 
 K=size(u2btildHist,2);
 T=100;
 
-SimTitle = {'Benchmark Simulation','Different Pareto Weights Simulation','Mean Preserving Spread in g Simulation', 'Increased Inequality Simulation'};
+%SimTitle = {'Benchmark Simulation','Different Pareto Weights Simulation','Mean Preserving Spread in g Simulation', 'Increased Inequality Simulation'};
 
 
 % -- GDP ----------------------------------------------------------
@@ -75,8 +73,8 @@ X.ylabel='After-tax wage income';
 X.name ='AfterTaxWageIncomeAgent2';
 PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist,plotpath,texpath)
 
-% -- IncomeFromAssetsAgent2 ----------------------------------------------------------
-X.data=IncomeFromAssets_Agent1Hist;
+% -- IncomeFromAssetsAgent1 ----------------------------------------------------------
+X.data=IncomeFromAssets_Agent1Hist(1:end);
 X.sHist=sHist;
 X.ylabel='Asset Income';
 X.name ='IncomeFromAssetsAgent1';
@@ -87,7 +85,7 @@ X.data=IntHist;
 X.sHist=sHist;
 X.ylabel='Int';
 X.name ='Int';
-PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist,plotpath,texpath)
+PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist(1:end-1,:),plotpath,texpath)
 
 
 % -- Gini Coeff ----------------------------------------------------------
@@ -102,7 +100,7 @@ X.data=TransDiffHist;
 X.sHist=sHist;
 X.ylabel='TransDiff';
 X.name ='TransDiff';
-PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist,plotpath,texpath)
+PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist(1:end-1,:),plotpath,texpath)
 
 
 % -- LaborTaxAgent1Diff Diff----------------------------------------------------------
@@ -110,18 +108,19 @@ X.data=LaborTaxAgent1DiffHist;
 X.sHist=sHist;
 X.ylabel='LaborTaxAgent1Diff';
 X.name ='LaborTaxAgent1Diff';
-PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist,plotpath,texpath)
+PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist(1:end-1,:),plotpath,texpath)
 
 % -- LaborTaxAgent2Diff Diff----------------------------------------------------------
 X.data=LaborTaxAgent2DiffHist;
 X.sHist=sHist;
 X.ylabel='LaborTaxAgent2Diff';
 X.name ='LaborTaxAgent2Diff';
-PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist,plotpath,texpath)
+PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist(1:end-1,:),plotpath,texpath)
 
 % -- DebtDiff Diff----------------------------------------------------------
 X.data=DebtDiffHist;
 X.sHist=sHist;
 X.ylabel='DebtDiff';
 X.name ='DebtDiffDiff';
-PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist,plotpath,texpath)
+PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist(1:end-1,:),plotpath,texpath)
+end

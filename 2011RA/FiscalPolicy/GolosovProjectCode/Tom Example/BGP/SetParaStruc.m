@@ -33,8 +33,8 @@ sSize=2; % Dimension of the markov state
 pertub=0.00;
 ctol=1e-7;
 grelax=.95;
-Niter=200;
-ResolveCtr=5;
+Niter=500;
+ResolveCtr=1;
 NumSim=10000;
 btild_1=0;
 
@@ -46,8 +46,8 @@ btild_1=0;
   OrderOfApprx_R=5;
 
    ApproxMethod='spli';
-  u2btildGridSize=20;
-  RGridSize=20;
+  u2btildGridSize=25;
+  RGridSize=25;
   OrderOfAppx_u2btild=10;
   OrderOfApprx_R=10;
  

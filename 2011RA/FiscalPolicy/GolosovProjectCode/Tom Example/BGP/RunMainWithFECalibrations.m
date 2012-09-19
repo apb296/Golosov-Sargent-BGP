@@ -49,26 +49,53 @@ Para.alpha_1=alpha_1;
 Para.alpha_2=alpha_2;
 Para.datapath=['Data/Calibration/'];
 mkdir(Para.datapath)
-casename='FE';
+casename='FE_High';
 Para.StoreFileName=['c' casename '.mat'];
 CoeffFileName=[Para.datapath Para.StoreFileName];
  
  %  --- SOLVE THE BELLMAN EQUATION --------------------------------------
  % test run 
  Para.Niter=250;
- MainBellman(Para)
-
- % -- plot diagnostics
- %GetPlotsForFinalSolution(Para)
  
- % -- Simulate the MODEL -------------------------------------------------
+MainBellman(Para)
+
+
+% ---- Medium alpha -----------------------------------------------------
+alpha_1=0.5;
+alpha_2=1-alpha_1;
+alpha_1=alpha_1*Para.n1;
+alpha_2=alpha_2*Para.n2;
+Para.alpha_1=alpha_1;
+Para.alpha_2=alpha_2;
+casename='FE_Med';
+Para.StoreFileName=['c' casename '.mat'];
+MainBellman(Para)
+
+
+% --- Low alpha ---------------------------------------------------------
+
+alpha_1=0.25;
+alpha_2=1-alpha_1;
+alpha_1=alpha_1*Para.n1;
+alpha_2=alpha_2*Para.n2;
+Para.alpha_1=alpha_1;
+Para.alpha_2=alpha_2;
+casename='FE_Low';
+Para.StoreFileName=['c' casename '.mat'];
+MainBellman(Para)
+
+
+%-- Simulate the MODEL -------------------------------------------------
 NumSim=10000;
 sHist0=round(rand(NumSim,1))+1;
 
 
-K=1;
+K=3;
 
-ex(1).casename='FE'; % benchmark calibrations
+ex(1).casename='FE_High'; % benchmark calibrations
+ex(2).casename='FE_Med'; % benchmark calibrations
+ex(3).casename='FE_Low'; % benchmark calibrations
+
 for ctrb=1:K
 CoeffFileName=['Data/Calibration/c' ex(ctrb).casename '.mat'];
 Sol=load(CoeffFileName);
@@ -96,7 +123,28 @@ save( [Para.datapath 'SimDataParallelCommonShocks.mat'],'sHist',...
        'LaborTaxAgent1DiffHist','LaborTaxAgent2DiffHist','DebtDiffHist',...
        'GiniCoeffHist')
 
-
-
+   
+   
+%    
+%  % -- PLOT DIAGNOSTICS -----------------------------------------
+% Para.datapath=['Data/Calibration/'];
+% mkdir(Para.datapath)
+% casename='FE';
+% Para.StoreFileName=['c' casename '.mat'];
+% GetPlotsForFinalSolution(Para)
+%  
+% % PLOT Simulations
+% close all
+% clear all
+% clc
+% SimTitle{1}='Calibrations'
+% SimDataPath= 'Data/Calibration/SimDataParallelCommonShocks.mat';
+% SimPlotPath='Graphs/Calibration/LongSimulations/';
+% mkdir(SimPlotPath)
+% SimTexPath='Tex/LongSimulations/ComparativeStatics/CommonShocks';
+% PlotParallelSimulationsCommonShocks(SimDataPath,SimTexPath,SimPlotPath,SimTitle)
+% 
+% 
+% 
 
  

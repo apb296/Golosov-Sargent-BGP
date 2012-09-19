@@ -5,7 +5,7 @@ BurnSampleRatio=.5;% Percentage of simulations to disregard
 %Long Simulations
 figure()
 for i = 1:K
-    subplot(4,1,i)
+    subplot(K,1,i)
     plot(X.data(:,i))
     xlabel('t')
     ylabel(X.ylabel,'Interpreter','Latex')
@@ -18,7 +18,7 @@ print(gcf,'-dpng ',[plotpath 'LongSimulations' X.name '.png'])
 %Short Simulation
 figure()
 for i = 1:K
-    subplot(4,1,i)
+    subplot(K,1,i)
     XX.Data=X.data(end-T+1:end,i);
     XX.sHist=X.sHist(end-T+1:end,i);
     XX.name=X.ylabel;  
@@ -37,13 +37,13 @@ for i = 1:K
 Moments(i,1) =mean(X.data(startIndex:end,i));
 Moments(i,2)=std(X.data(startIndex:end,i));
 Moments(i,3)=corr(X.data(startIndex:end,i),X.data(startIndex-1:end-1,i));
-Moments(i,4)=corr(X.data(startIndex:end,i),gHist(startIndex:end,i));
+Moments(i,K)=corr(X.data(startIndex:end,i),gHist(startIndex:end,i));
 end
 
 
 rowLabels = SimTitle;
 columnLabels = {'Mean','Std','AutoCorr','Corr with g'};
-matrix2latex(Moments, [texpath X.name 'Moments.tex'] , 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.4f', 'size', 'tiny');
+matrix2latex(Moments, [texpath X.name 'Moments.tex'] , 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.Kf', 'size', 'tiny');
 
 
 
