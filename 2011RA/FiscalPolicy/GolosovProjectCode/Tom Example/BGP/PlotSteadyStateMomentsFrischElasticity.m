@@ -4,17 +4,18 @@ close all
 SetParaStruc
 theta_1=3.3;
 theta_2=1;
+g_l_y=.11;
+g_h_y=.13;
 n1=1;
 n2=1;
 tau=.2;
-g_Y=.12;
+g_Y=mean([g_l_y g_h_y]);
 AvfFETarget=.5;
 x=fsolve(@(x) GetCalibrationFrischElasticity (x,AvfFETarget,theta_1,theta_2,tau,g_Y,n1,n2), [1 1 ]);
 gamma=x(1)
 Y=x(2)
 g=g_Y*Y;
 psi=1/(1+gamma);
-
 beta=.9;
 Para.beta=.9;
 Para.alpha_1=alpha_1;
