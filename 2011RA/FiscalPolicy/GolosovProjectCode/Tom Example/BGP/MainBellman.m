@@ -210,7 +210,11 @@ end
             [PolicyRules, V_new,exitflag,~]=CheckGradNAG(u2btild,R,s_,c,V,xInit',Para,0);
             ExitFlag(ctr)=exitflag;
             VNew(ctr)=V_new;
+            % update policyrules guess only for exitflag==1
+            if exitflag==1
             PolicyRulesStore(ctr,:)=PolicyRules;
+            end
+           
         end
         
         ExitFlag(GridSize/2+1:GridSize)=ExitFlag(1:GridSize/2);
