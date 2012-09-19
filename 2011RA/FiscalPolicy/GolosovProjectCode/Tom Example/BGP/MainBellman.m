@@ -39,7 +39,7 @@ matrix2latex([g_yFB_l g_yFB_h  ; Agent1WageShareFB_l Agent1WageShareFB_h], [Para
 % This setups up the functional space and the grid.
 %u2btildMin=-(Para.theta_1-Para.theta_2)/(1-Para.beta)*(1/(Para.n1*Para.theta_1+Para.n2*Para.theta_2-Para.g(1)));
 %u2btildMin=u2btildMin/4;
-u2btildMin=-10;
+u2btildMin=-8;
 u2btildMax=-u2btildMin;
 u2btildGrid=linspace(u2btildMin,u2btildMax,Para.u2btildGridSize);
 
@@ -56,7 +56,7 @@ end
 
 % R=u_2/u_1 = c1/c2
 RMin=max(Rbar)*1.05;
-RMax=max(Rbar)*1.8;
+RMax=max(Rbar)*1.7;
 RGrid=linspace(RMin,RMax,Para.RGridSize);
 
 Para.RGrid=RGrid;
@@ -252,8 +252,9 @@ end
         
         toc
        
-        
-        
+       if mod(iter,10)==1
+    save([ Para.datapath  'c_' num2str(iter) '.mat' ] , 'c','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V');    
+       end
     end
     
 save([ Para.datapath Para.StoreFileName] , 'c','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V');

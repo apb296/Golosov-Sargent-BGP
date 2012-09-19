@@ -7,8 +7,8 @@ close all;
 olddatapath=Para.datapath;
 oldtexpath=Para.texpath;
 oldplotpath=Para.plotpath;
-plotpath=oldplotpath;
-datapath=olddatapath;
+plotpath='Graphs/Calibration/';
+datapath='Data/Calibration/';
 disp('Govt Exp')
 g=Para.g
 

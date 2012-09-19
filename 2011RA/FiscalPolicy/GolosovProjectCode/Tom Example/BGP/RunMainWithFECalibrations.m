@@ -55,11 +55,11 @@ CoeffFileName=[Para.datapath Para.StoreFileName];
  
  %  --- SOLVE THE BELLMAN EQUATION --------------------------------------
  % test run 
- Para.Niter=300;
+ Para.Niter=250;
  MainBellman(Para)
 
  % -- plot diagnostics
- GetPlotsForFinalSolution(Para)
+ %GetPlotsForFinalSolution(Para)
  
  % -- Simulate the MODEL -------------------------------------------------
 NumSim=10000;
