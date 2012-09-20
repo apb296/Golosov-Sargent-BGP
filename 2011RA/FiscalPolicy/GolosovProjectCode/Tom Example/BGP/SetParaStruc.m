@@ -14,8 +14,8 @@ end
 % 1. Paramters describing the preferences
 theta_1=3.3; % type of Agent 1
 theta_2=1; % Type of Agent 2
-k_a = 4;
-epsilon = 0.0001;
+k_a = 2;
+epsilon = 0.00001;
 psi=.6958; % Leisure consumption substitution
 beta=.9 ;% subjective time discount factor;
 n1=1;
