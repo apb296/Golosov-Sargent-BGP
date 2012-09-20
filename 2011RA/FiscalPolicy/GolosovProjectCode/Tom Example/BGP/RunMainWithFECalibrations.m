@@ -60,82 +60,83 @@ CoeffFileName=[Para.datapath Para.StoreFileName];
 MainBellman(Para)
 
 
-% --- Low alpha ---------------------------------------------------------
-
-alpha_1=0.25;
-alpha_2=1-alpha_1;
-alpha_1=alpha_1*Para.n1;
-alpha_2=alpha_2*Para.n2;
-Para.alpha_1=alpha_1;
-Para.alpha_2=alpha_2;
-casename='FE_Low';
-Para.StoreFileName=['c' casename '.mat'];
-MainBellman(Para)
-
-
-%-- Simulate the MODEL -------------------------------------------------
-NumSim=10000;
-sHist0=round(rand(NumSim,1))+1;
-
-
-K=2;
-
-ex(1).casename='FE_High'; % benchmark calibrations
-ex(2).casename='FE_Low'; % benchmark calibrations
-
-for ctrb=1:K
-CoeffFileName=['Data/Calibration/c' ex(ctrb).casename '.mat'];
-Sol=load(CoeffFileName);
-Param(ctrb)=Sol.Para;
-end
-
-for ctrb=1:K
-  CoeffFileName=['Data/Calibration/c' ex(ctrb).casename '.mat'];
-
-[sHist(:,ctrb),gHist(:,ctrb),u2btildHist(:,ctrb),RHist(:,ctrb),...
-TauHist(:,ctrb),YHist(:,ctrb),TransHist(:,ctrb),btildHist(:,ctrb),...
-c1Hist(:,ctrb),c2Hist(:,ctrb),l1Hist(:,ctrb),l2Hist(:,ctrb),...
-IntHist(:,ctrb),IncomeFromAssets_Agent1Hist(:,ctrb),...
-AfterTaxWageIncome_Agent1Hist(:,ctrb),AfterTaxWageIncome_Agent2Hist(:,ctrb),...
-GShockDiffHist(:,ctrb),TransDiffHist(:,ctrb),LaborTaxAgent1DiffHist(:,ctrb),...
-LaborTaxAgent2DiffHist(:,ctrb),DebtDiffHist(:,ctrb),GiniCoeffHist(:,ctrb)]...
-=RunSimulations(CoeffFileName,0,NumSim,Param(ctrb),sHist0);
-end
-
-save( [Para.datapath 'SimDataParallelCommonShocks.mat'],'sHist',...
-       'gHist','u2btildHist','RHist','TauHist','YHist','TransHist',...
-       'btildHist','c1Hist','c2Hist','l1Hist','l2Hist','Para','IntHist',...
-       'AfterTaxWageIncome_Agent1Hist','AfterTaxWageIncome_Agent2Hist',...
-       'IncomeFromAssets_Agent1Hist','GShockDiffHist','TransDiffHist',...
-       'LaborTaxAgent1DiffHist','LaborTaxAgent2DiffHist','DebtDiffHist',...
-       'GiniCoeffHist')
-
-   
-   
-   
- % -- PLOT DIAGNOSTICS -----------------------------------------
-Para.datapath=['Data/Calibration/'];
-mkdir(Para.datapath)
-casename='FE_High';
-Para.StoreFileName=['c' casename '.mat'];
-Para.StoreFileName=['c355.mat'];
-%Para.StoreFileName=['cDE.mat'];
-%Para.StoreFileName=['cFE_Low.mat'];
-GetPlotsForFinalSolution(Para)
- 
-% PLOT Simulations
-close all
-clear all
-clc
-SimTitle{1}='alpha_high'
-SimTitle{2}='alpha_low'
-SimDataPath= 'Data/Calibration/SimDataParallelCommonShocks.mat';
-SimPlotPath='Graphs/Calibration/LongSimulations/';
-mkdir(SimPlotPath)
-SimTexPath='Tex/LongSimulations/ComparativeStatics/CommonShocks';
-PlotParallelSimulationsCommonShocks(SimDataPath,SimTexPath,SimPlotPath,SimTitle)
-
-
-
-
- 
+% % --- Low alpha ---------------------------------------------------------
+% 
+% alpha_1=0.25;
+% alpha_2=1-alpha_1;
+% alpha_1=alpha_1*Para.n1;
+% alpha_2=alpha_2*Para.n2;
+% Para.alpha_1=alpha_1;
+% Para.alpha_2=alpha_2;
+% casename='FE_Low';
+% Para.StoreFileName=['c' casename '.mat'];
+% MainBellman(Para)
+% 
+% 
+% %-- Simulate the MODEL -------------------------------------------------
+% NumSim=10000;
+% sHist0=round(rand(NumSim,1))+1;
+% 
+% 
+% K=2;
+% 
+% ex(1).casename='FE_High'; % benchmark calibrations
+% ex(2).casename='FE_Low'; % benchmark calibrations
+% 
+% for ctrb=1:K
+% CoeffFileName=['Data/Calibration/c' ex(ctrb).casename '.mat'];
+% Sol=load(CoeffFileName);
+% Param(ctrb)=Sol.Para;
+% end
+% 
+% for ctrb=1:K
+%   CoeffFileName=['Data/Calibration/c' ex(ctrb).casename '.mat'];
+% 
+% [sHist(:,ctrb),gHist(:,ctrb),u2btildHist(:,ctrb),RHist(:,ctrb),...
+% TauHist(:,ctrb),YHist(:,ctrb),TransHist(:,ctrb),btildHist(:,ctrb),...
+% c1Hist(:,ctrb),c2Hist(:,ctrb),l1Hist(:,ctrb),l2Hist(:,ctrb),...
+% IntHist(:,ctrb),IncomeFromAssets_Agent1Hist(:,ctrb),...
+% AfterTaxWageIncome_Agent1Hist(:,ctrb),AfterTaxWageIncome_Agent2Hist(:,ctrb),...
+% GShockDiffHist(:,ctrb),TransDiffHist(:,ctrb),LaborTaxAgent1DiffHist(:,ctrb),...
+% LaborTaxAgent2DiffHist(:,ctrb),DebtDiffHist(:,ctrb),GiniCoeffHist(:,ctrb)]...
+% =RunSimulations(CoeffFileName,0,NumSim,Param(ctrb),sHist0);
+% end
+% 
+% save( [Para.datapath 'SimDataParallelCommonShocks.mat'],'sHist',...
+%        'gHist','u2btildHist','RHist','TauHist','YHist','TransHist',...
+%        'btildHist','c1Hist','c2Hist','l1Hist','l2Hist','Para','IntHist',...
+%        'AfterTaxWageIncome_Agent1Hist','AfterTaxWageIncome_Agent2Hist',...
+%        'IncomeFromAssets_Agent1Hist','GShockDiffHist','TransDiffHist',...
+%        'LaborTaxAgent1DiffHist','LaborTaxAgent2DiffHist','DebtDiffHist',...
+%        'GiniCoeffHist')
+% 
+%    
+%    
+%    
+%  % -- PLOT DIAGNOSTICS -----------------------------------------
+% Para.datapath=['Data/Calibration/'];
+% mkdir(Para.datapath)
+% casename='FE_High';
+% Para.StoreFileName=['c' casename '.mat'];
+% Para.StoreFileName=['c355.mat'];
+% %Para.StoreFileName=['cDE.mat'];
+% %Para.StoreFileName=['cFE_Low.mat'];
+% GetPlotsForFinalSolution(Para)
+%     
+% % PLOT Simulations
+% close all
+% clear all
+% clc
+% SimTitle{1}='Low'
+% SimTitle{2}='Med'
+% SimTitle{3}='high'
+% SimDataPath= 'Data/Calibration/SimDataParallel.mat';
+% SimPlotPath='Graphs/Calibration/test/';
+% mkdir(SimPlotPath)
+% SimTexPath='Tex/LongSimulations/ComparativeStatics/CommonShocks';
+% PlotParallelSimulationsCommonShocks(SimDataPath,SimTexPath,SimPlotPath,SimTitle)
+% 
+% 
+% 
+% 
+%  
