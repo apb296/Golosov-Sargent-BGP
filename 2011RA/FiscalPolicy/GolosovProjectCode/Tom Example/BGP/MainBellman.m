@@ -191,6 +191,11 @@ end
    if strcmpi(flagComputeInitCoeff,'no')
                     PolicyRulesStore=InitData.PolicyRulesStore;
    end
+   %store coefficients for value function
+   c_alt = c;
+   V_alt = V;
+   VNewAlt = VNew;
+   
     %% ITERATE ON THE VALUE FUNCTION
     Para.g
     for iter=2:Para.Niter
@@ -207,27 +212,27 @@ end
             s_=s_slice(ctr);
             %[xInit]=GetInitialApproxPolicy([u2btild R s_],x_state,PolicyRulesStoreOld);
             xInit=PolicyRulesStore(ctr,:);
-            [PolicyRules, V_new,exitflag,~]=CheckGradNAG(u2btild,R,s_,c,V,xInit',Para,0);
+            [PolicyRules, V_new,V_new_alt,exitflag,~]=CheckGradNAG(u2btild,R,s_,c,c_alt,V,V_alt,xInit',Para,0);
             ExitFlag(ctr)=exitflag;
             VNew(ctr)=V_new;
+            VNewAlt(ctr) = V_new_alt;
             PolicyRulesStore(ctr,:)=PolicyRules;
         end
         
         ExitFlag(GridSize/2+1:GridSize)=ExitFlag(1:GridSize/2);
         VNew(GridSize/2+1:GridSize)=VNew(1:GridSize/2);
+        VNewAlt(GridSize/2+1:GridSize)=VNewAlt(1:GridSize/2);
         PolicyRulesStore(GridSize/2+1:GridSize,:)=PolicyRulesStore(1:GridSize/2,:);         
         IndxUnSolved=find(~(ExitFlag==1));
         IndxSolved=find(ExitFlag==1);
         
         % --  Rsolve the FOC at points that failed in the first round -----
-        if mod(iter,Para.ResolveCtr)==0
             NumTrials=3;
             UnResolvedPoints
             if NumResolved>0
                 Numtrials=5;
                 UnResolvedPoints;
             end
-        end
         IndxUnSolved=find(~(ExitFlag==1));
         IndxSolved=find(ExitFlag==1);
         IndxSolved_1=IndxSolved(IndxSolved<=GridSize/Para.sSize);
@@ -242,6 +247,8 @@ end
         
         cNew(2,:)=cNew(1,:);
      
+        cNewAlt(1,:)=funfitxy(V_alt(1),x_state(IndxSolved_1,1:2),VNewAlt(IndxSolved_1)' );
+        cNewAlt(2,:) = cNewAlt(2,:);
         
         % Store the difference
         cdiff(iter,:)=sum(abs(c-cNew))';
@@ -249,6 +256,7 @@ end
         % update the guess by taking a weighted average of the old and new
         % coeffecients
         c=cNew*Para.grelax+(1-Para.grelax)*cOld;
+        c_alt = cNewAlt*Para.grelax+(1-Para.grelax)*c_alt;
         
         disp('Completed Iteration No - ')
         disp(iter)
@@ -256,7 +264,7 @@ end
         toc
        
         
-    save([ Para.datapath 'c' num2str(iter) '.mat'] , 'c','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V');
+    save([ Para.datapath 'c' num2str(iter) '.mat'] , 'c','c_alt','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V','V_alt');
         
     end
     

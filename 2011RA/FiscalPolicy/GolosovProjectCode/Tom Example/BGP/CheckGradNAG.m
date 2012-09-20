@@ -1,6 +1,6 @@
 % Inputs - xInit, state variables - u2btild,,R,s_  coeff, value
 % function, para
-function [PolicyRules, V_new,exitflag,fvec]=CheckGradNAG(u2bdiff,RR,s,c,VV,xInit,Para,flagOpt)
+function [PolicyRules, V_new,V_alt,exitflag,fvec]=CheckGradNAG(u2bdiff,RR,s,c,c_alt,VV,VValt,xInit,Para,flagOpt)
 global V Vcoef R u2btild Par s_ flagCons
 
 %Get the initial guess for the uconstraint problem. With the simplification
@@ -222,6 +222,12 @@ Vobj = P(s_,1)*(alpha(1)*uBGP(c1_1,l1(1),psi)+alpha(2)*uBGP(c2_1,l2(1),psi)...
 Vobj = Vobj + P(s_,2)*(alpha(1)*uBGP(c1_2,l1(2),psi)+alpha(2)*uBGP(c2_2,l2(2),psi)...
     -(1/k_a)*epsilon*btildprime(2)^k_a ...
     +beta*funeval(Vcoef{2},V(2),X(2,:)));
+
+V_alt = P(s_,1)*(alpha(1)*uBGP(c1_1,l1(1),psi)+alpha(2)*uBGP(c2_1,l2(1),psi)...
+    +beta*funeval(c(1,:)',VValt(1),X(1,:)));
+
+V_alt = V_alt + P(s_,2)*(alpha(1)*uBGP(c1_2,l1(2),psi)+alpha(2)*uBGP(c2_2,l2(2),psi)...
+    +beta*funeval(c(2,:)',VValt(2),X(2,:)));
 
 V_new=Vobj;
 PolicyRules=[c1_1 c1_2 c2_1 c2_2 l1(1) l1(2) l2(1) l2(2) btildprime c2_1^(-1)/c1_1^(-1) c2_2^(-1)/c1_2^(-1) u2btildprime(1) u2btildprime(2)];
