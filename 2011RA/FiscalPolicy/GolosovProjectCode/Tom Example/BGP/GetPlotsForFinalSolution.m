@@ -114,6 +114,8 @@ print(gcf,'-dpng',[plotpath 'ChebError.png'])
 
 %
 % % Caption : fig:ValueFunction - This plot depicts the value function
+figure()
+
 
 figure()
 
@@ -138,6 +140,19 @@ for xctr=1:4
 end
 
 print(gcf,'-dpng',[plotpath 'ValueFunctionR.png'])
+
+% % Caption : fig:ValueFunction - This plot depicts the value function
+figure()
+xlist=0
+for xctr=1:1
+    fplot(@(R) funeval(c(s_,:)',V(s_),[xlist(xctr) R]),[Rbounds(1) Rbounds(2)],'-k');
+    xlabel('$R$','Interpreter','Latex')
+    title(['$x=$' num2str(xlist(xctr))],'Interpreter','Latex')
+    hold on
+end
+
+print(gcf,'-dpng',[plotpath 'ValueFunctionRx_0.png'])
+
 
 %% Policy Rules entire state space
 % Caption : fig:PolicyRules - This plot depicts the $\tilde{b}'_2$ as a function of $\tilde{b}_2$
@@ -225,4 +240,8 @@ print(figFOCRes,'-dpng',[plotpath 'FOCResFullDomain.png'])
 print(figu2BtildePrime,'-dpng',[plotpath 'u2BtildePrimeFullDomain.png'])
 print(figBtildePrime,'-dpng',[plotpath 'BtildePrimeFullDomain.png'])
 print(figRprime,'-dpng',[plotpath 'RPrimeFullDomain.png'])
+
+
+
+
 end

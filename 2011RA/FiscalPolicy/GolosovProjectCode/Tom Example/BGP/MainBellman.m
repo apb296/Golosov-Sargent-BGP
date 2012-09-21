@@ -55,10 +55,10 @@ end
 
 
 % R=u_2/u_1 = c1/c2
-%RMin=max(Rbar)*1.05;
+%RMin=max(Rbar)*1.01;
 %RMax=max(Rbar)*1.7;
-RMin=2.5;
-RMax=4.5;
+RMin=2;
+RMax=3;
 
 RGrid=linspace(RMin,RMax,Para.RGridSize);
 
@@ -222,13 +222,17 @@ end
         PolicyRulesStore(GridSize/2+1:GridSize,:)=PolicyRulesStore(1:GridSize/2,:);         
         IndxUnSolved=find(~(ExitFlag==1));
         IndxSolved=find(ExitFlag==1);
-        
+        sprintf('fraction of nodes unresolved at the first pass = %1.3f',length(IndxUnSolved)./GridSize)
+       
         % --  Rsolve the FOC at points that failed in the first round -----
         if mod(iter,Para.ResolveCtr)==0
-            NumTrials=3;
+            NumTrials=5;
+         sprintf('Resolving the unresolved points using alterative routine ')
+
             UnResolvedPoints
             if NumResolved>0
-                Numtrials=5;
+                Numtrials=10;
+                sprintf('Resolving the unresolved points using alterative routine ')
                 UnResolvedPoints;
             end
         end
@@ -259,7 +263,7 @@ end
         
         toc
        
-       if mod(iter,10)==1
+       if mod(iter,1)==0
     save([ Para.datapath  'c_' num2str(iter) '.mat' ] , 'c','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V');    
        end
     end
