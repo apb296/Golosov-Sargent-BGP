@@ -260,7 +260,7 @@ end
         toc
        
        if mod(iter,10)==1
-    save([ Para.datapath  'c_' num2str(iter) '.mat' ] , 'c','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V');    
+    save([ Para.datapath  'c' num2str(iter) '.mat' ] , 'c','cdiff','IndxSolved','IndxUnSolved','PolicyRulesStore','VNew','x_state','Para','V');    
        end
     end
     
