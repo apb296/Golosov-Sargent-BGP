@@ -113,15 +113,15 @@ MainBellman(Para)
 %    
 %    
 %    
-%  % -- PLOT DIAGNOSTICS -----------------------------------------
-% Para.datapath=['Data/Calibration/'];
-% mkdir(Para.datapath)
-% casename='FE_High';
-% Para.StoreFileName=['c' casename '.mat'];
-% Para.StoreFileName=['c355.mat'];
-% %Para.StoreFileName=['cDE.mat'];
-% %Para.StoreFileName=['cFE_Low.mat'];
-% GetPlotsForFinalSolution(Para)
+ % -- PLOT DIAGNOSTICS -----------------------------------------
+Para.datapath=['Data/Calibration/'];
+mkdir(Para.datapath)
+casename='FE_High';
+%Para.StoreFileName=['c' casename '.mat'];
+%Para.StoreFileName=['c355.mat'];
+%Para.StoreFileName=['cDE.mat'];
+%Para.StoreFileName=['cFE_Low.mat'];
+GetPlotsForFinalSolution(Para)
 %     
 % % PLOT Simulations
 % close all
