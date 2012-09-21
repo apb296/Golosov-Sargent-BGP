@@ -1,7 +1,7 @@
  clc
  clear all
  close all
- 
+
  %{ 
 This file solves the G-S economy with BGP preferences of the form
  psi.log[c]+(1-psi)log[1-l] with following calibrations
@@ -86,6 +86,24 @@ casename='FE_Low';
 Para.StoreFileName=['c' casename '.mat'];
 %MainBellman(Para)
 
+
+
+ %% Set the Parallel Config
+err=[];
+try
+    matlabpool('size')
+catch err
+end
+if isempty(err)
+    
+    
+    if(matlabpool('size') > 0)
+        matlabpool close
+    end
+    
+    matlabpool open local;
+    
+end
 
 %-- Simulate the MODEL -------------------------------------------------
 NumSim=10000;
