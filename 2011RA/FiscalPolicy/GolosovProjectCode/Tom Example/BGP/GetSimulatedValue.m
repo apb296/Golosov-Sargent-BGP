@@ -32,8 +32,7 @@ for i = 1:NumSim
         s = randi(2);
         
         %update value
-        VSim = VSim + disc *(alpha(1)*uBGP(c1(s),l1(s),psi)+alpha(2)*uBGP(c2(s),l2(s),psi)...
-            +beta*funeval(c(s,:)',V(s),[u2btildprime(s),Rprime(s)]));
+        VSim = VSim + disc *(alpha(1)*uBGP(c1(s),l1(s),psi)+alpha(2)*uBGP(c2(s),l2(s),psi));
         
         %Store next period states
         u2btild = u2btildprime(s);
