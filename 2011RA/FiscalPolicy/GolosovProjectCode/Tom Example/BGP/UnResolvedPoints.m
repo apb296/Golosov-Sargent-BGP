@@ -2,8 +2,7 @@
 IndxUnSolved=find(~(ExitFlag==1));
     IndxSolved=find(ExitFlag==1);
   %disp('Total Unresolved Points')
-  sprintf(' Unresolved so f = %1.2f ',length(find(IndxUnSolved)))
-  sprintf(' Total Points = %1.2f ',GridSize)
+  sprintf(' Unresolved so far  %1.2f  out of %1.2f',length(find(IndxUnSolved),GridSize))
 NumUnsolved=length(IndxUnSolved);
 for i=1:NumUnsolved
     IndxSolved=find(ExitFlag==1);
@@ -48,7 +47,9 @@ end
  
         ExitFlag(uns_indx)=exitflag;
         VNew(uns_indx)=V_new;
+        if exitflag==1
         PolicyRulesStore(uns_indx,:)=PolicyRules;
+        end
            IndxSolved=find(ExitFlag==1);
 
         

@@ -34,7 +34,7 @@ pertub=0.00;
 ctol=1e-7;
 grelax=.95;
 Niter=500;
-ResolveCtr=5;
+ResolveCtr=1;
 NumSim=10000;
 btild_1=0;
 

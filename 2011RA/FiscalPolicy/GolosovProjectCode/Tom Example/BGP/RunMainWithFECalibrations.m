@@ -57,18 +57,18 @@ CoeffFileName=[Para.datapath Para.StoreFileName];
  % test run 
  Para.Niter=250;
  
-MainBellman(Para)
+ %MainBellman(Para)
 
 
-% --- Low alpha ---------------------------------------------------------
+% --- Med alpha ---------------------------------------------------------
 
-alpha_1=0.25;
+alpha_1=0.5;
 alpha_2=1-alpha_1;
 alpha_1=alpha_1*Para.n1;
 alpha_2=alpha_2*Para.n2;
 Para.alpha_1=alpha_1;
 Para.alpha_2=alpha_2;
-casename='FE_Low';
+casename='FE_Med';
 Para.StoreFileName=['c' casename '.mat'];
 MainBellman(Para)
 
@@ -80,8 +80,8 @@ sHist0=round(rand(NumSim,1))+1;
 
 K=2;
 
-ex(1).casename='FE_High'; % benchmark calibrations
-ex(2).casename='FE_Low'; % benchmark calibrations
+ex(1).casename='FE_High'; % benchmark calibrations high alpha1
+ex(2).casename='FE_Med'; % benchmark calibrations with medium alpha1
 
 for ctrb=1:K
 CoeffFileName=['Data/Calibration/c' ex(ctrb).casename '.mat'];
@@ -119,6 +119,8 @@ mkdir(Para.datapath)
 casename='FE_High';
 Para.StoreFileName=['c' casename '.mat'];
 Para.StoreFileName=['c355.mat'];
+Para.StoreFileName=['c2.mat'];
+Para.StoreFileName=['c_60.mat'];
 %Para.StoreFileName=['cDE.mat'];
 %Para.StoreFileName=['cFE_Low.mat'];
 GetPlotsForFinalSolution(Para)
@@ -127,8 +129,8 @@ GetPlotsForFinalSolution(Para)
 close all
 clear all
 clc
-SimTitle{1}='alpha_high'
-SimTitle{2}='alpha_low'
+SimTitle{1}='alpha_high';
+SimTitle{2}='alpha_Med';
 SimDataPath= 'Data/Calibration/SimDataParallelCommonShocks.mat';
 SimPlotPath='Graphs/Calibration/LongSimulations/';
 mkdir(SimPlotPath)
