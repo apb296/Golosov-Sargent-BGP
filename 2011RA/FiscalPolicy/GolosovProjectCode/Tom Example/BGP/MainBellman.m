@@ -194,6 +194,10 @@ end
    %store coefficients for value function
    c_alt = c;
    V_alt = V;
+<<<<<<< HEAD
+=======
+ %  VNewAlt = VNew;
+>>>>>>> origin/TomModificationTest
    
     %% ITERATE ON THE VALUE FUNCTION
     Para.g
@@ -247,7 +251,7 @@ end
         cNew(2,:)=cNew(1,:);
      
         cNewAlt(1,:)=funfitxy(V_alt(1),x_state(IndxSolved_1,1:2),VNewAlt(IndxSolved_1)' );
-        cNewAlt(2,:) = cNewAlt(2,:);
+        cNewAlt(2,:) = cNewAlt(1,:);
         
         % Store the difference
         cdiff(iter,:)=sum(abs(c-cNew))';
