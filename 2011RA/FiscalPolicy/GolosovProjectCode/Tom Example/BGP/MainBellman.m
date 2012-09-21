@@ -41,8 +41,8 @@ u2btildMin=-(Para.theta_1-Para.theta_2)/(1-Para.beta)*(1/(Para.n1*Para.theta_1+P
 u2btildMin=u2btildMin/8;
 u2btildMax=-u2btildMin
 u2btildMin = u2btildMin*1.2
-u2btildMin = -2;
-u2btildMax = 1;
+u2btildMin = -5;
+u2btildMax = 5;
 u2btildGrid=linspace(u2btildMin,u2btildMax,Para.u2btildGridSize);
 
 Para.u2bdiffGrid=u2btildGrid;
@@ -194,7 +194,6 @@ end
    %store coefficients for value function
    c_alt = c;
    V_alt = V;
-   VNewAlt = VNew;
    
     %% ITERATE ON THE VALUE FUNCTION
     Para.g
