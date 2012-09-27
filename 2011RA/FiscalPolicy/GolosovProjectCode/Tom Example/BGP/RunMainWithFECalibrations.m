@@ -22,8 +22,8 @@ theta_1=3.3; % theta high
 theta_2=1;  % theta low
 g_l_y=.11; % g low
 g_h_y=.13; % g high
-n1=1;
-n2=1;
+n1=.5;
+n2=.5;
 tau=.2;
 g_Y=mean([g_l_y g_h_y]);
 AvfFETarget=.5;
@@ -35,6 +35,8 @@ psi=1/(1+gamma);
 beta=.9;
 alpha_1=0.75;
 alpha_2=1-alpha_1;
+Para.n1=n1;
+Para.n2=n2;
 alpha_1=alpha_1*Para.n1;
 alpha_2=alpha_2*Para.n2;
 Para.beta=.9;
@@ -56,8 +58,10 @@ CoeffFileName=[Para.datapath Para.StoreFileName];
  %  --- SOLVE THE BELLMAN EQUATION --------------------------------------
  % test run 
  Para.Niter=250;
- 
- %MainBellman(Para)
+RGrid.RMin=2.2;
+RGrid.RMax=2.8;
+MainBellman(Para,RGrid) 
+ MainBellman(Para)
 
 
 % --- Med alpha ---------------------------------------------------------
@@ -70,7 +74,9 @@ Para.alpha_1=alpha_1;
 Para.alpha_2=alpha_2;
 casename='FE_Med';
 Para.StoreFileName=['c' casename '.mat'];
-%MainBellman(Para)
+RGrid.RMin=2.2;
+RGrid.RMax=2.8;
+MainBellman(Para,RGrid)
 
 
 
@@ -84,7 +90,9 @@ Para.alpha_1=alpha_1;
 Para.alpha_2=alpha_2;
 casename='FE_Low';
 Para.StoreFileName=['c' casename '.mat'];
-%MainBellman(Para)
+RGrid.RMin=2.2;
+RGrid.RMax=2.8;
+MainBellman(Para,RGrid)
 
 
 
@@ -106,7 +114,7 @@ if isempty(err)
 end
 
 %-- Simulate the MODEL -------------------------------------------------
-NumSim=10000;
+NumSim=25000;
 sHist0=round(rand(NumSim,1))+1;
 
 
@@ -155,7 +163,7 @@ save( [Para.datapath 'SimDataParallelCommonShocks.mat'],'sHist',...
 % Para.StoreFileName=['c' casename '.mat'];
 % Para.StoreFileName=['c355.mat'];
 % Para.StoreFileName=['c2.mat'];
-% Para.StoreFileName=['c_3.mat'];
+% Para.StoreFileName=['c_2.mat'];
 % %Para.StoreFileName=['cDE.mat'];
 % Para.StoreFileName=['cFE_Med.mat'];
 % GetPlotsForFinalSolution(Para)

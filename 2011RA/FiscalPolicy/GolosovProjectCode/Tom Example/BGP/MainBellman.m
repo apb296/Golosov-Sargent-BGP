@@ -1,4 +1,4 @@
-function MainBellman(Para,InitData)
+function MainBellman(Para,RGrid)
 close all;
 % This is the main file for computing the minimally stochastic case for BGP
 % preferences
@@ -17,12 +17,13 @@ switch nargin
     case 0 % No arguments
         SetParaStruc % set Para
         flagComputeInitCoeff='yes';
+        flagSetRGrid='no';
     case 1 % given Para
         flagComputeInitCoeff='yes';
+        flagSetRGrid='no';
     case 2 % given para and data for initialization
-        flagComputeInitCoeff='no';
-        cInit=InitData.c;
-        VInit=InitData.V;
+        flagComputeInitCoeff='yes';
+       flagSetRGrid='yes';
 end
 
 
@@ -55,12 +56,16 @@ end
 
 
 % R=u_2/u_1 = c1/c2
-%RMin=max(Rbar)*1.01;
-%RMax=max(Rbar)*1.7;
-RMin=2;
-RMax=3;
 
-RGrid=linspace(RMin,RMax,Para.RGridSize);
+    
+RMin=max(Rbar)*1.01;
+RMax=max(Rbar)*1.7;
+if strcmpi(flagSetRGrid,'yes')==1
+disp('setting RGrid with user inputs')
+RMin=RGrid.RMin;
+RMax=RGrid.RMax;
+end
+RGrid=linspace(RMin,RMax,Para.RGridSize)
 
 Para.RGrid=RGrid;
 GridSize=Para.u2btildGridSize*Para.RGridSize*Para.sSize;
