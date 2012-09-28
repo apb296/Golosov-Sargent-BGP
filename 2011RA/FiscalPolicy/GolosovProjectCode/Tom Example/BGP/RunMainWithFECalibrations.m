@@ -22,8 +22,8 @@ theta_1=3.3; % theta high
 theta_2=1;  % theta low
 g_l_y=.11; % g low
 g_h_y=.13; % g high
-n1=.5;
-n2=.5;
+n1=1;
+n2=1;
 tau=.2;
 g_Y=mean([g_l_y g_h_y]);
 AvfFETarget=.5;
@@ -91,7 +91,7 @@ Para.alpha_2=alpha_2;
 casename='FE_Low';
 Para.StoreFileName=['c' casename '.mat'];
 RGrid.RMin=2.2;
-RGrid.RMax=2.8;
+RGrid.RMax=2.5;
 MainBellman(Para,RGrid)
 
 
@@ -163,7 +163,7 @@ save( [Para.datapath 'SimDataParallelCommonShocks.mat'],'sHist',...
 % Para.StoreFileName=['c' casename '.mat'];
 % Para.StoreFileName=['c355.mat'];
 % Para.StoreFileName=['c2.mat'];
-% Para.StoreFileName=['c_2.mat'];
+% Para.StoreFileName=['c_5.mat'];
 % %Para.StoreFileName=['cDE.mat'];
 % Para.StoreFileName=['cFE_Med.mat'];
 % GetPlotsForFinalSolution(Para)

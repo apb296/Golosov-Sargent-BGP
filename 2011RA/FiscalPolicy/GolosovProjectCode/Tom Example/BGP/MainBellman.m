@@ -40,7 +40,7 @@ matrix2latex([g_yFB_l g_yFB_h  ; Agent1WageShareFB_l Agent1WageShareFB_h], [Para
 % This setups up the functional space and the grid.
 %u2btildMin=-(Para.theta_1-Para.theta_2)/(1-Para.beta)*(1/(Para.n1*Para.theta_1+Para.n2*Para.theta_2-Para.g(1)));
 %u2btildMin=u2btildMin/4;
-u2btildMin=-5;
+u2btildMin=-4;
 u2btildMax=-u2btildMin;
 u2btildGrid=linspace(u2btildMin,u2btildMax,Para.u2btildGridSize);
 
