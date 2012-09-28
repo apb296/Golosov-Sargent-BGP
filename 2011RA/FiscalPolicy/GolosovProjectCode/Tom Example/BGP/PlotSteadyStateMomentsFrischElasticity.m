@@ -28,7 +28,7 @@ Para.btild_1=0;
 
 %% Build Grid for the state variables
 % This setups up the functional space and the grid.
-u2btildMin=-10;
+u2btildMin=-2;
 u2btildMax=-u2btildMin;
 u2btildGrid=linspace(u2btildMin,u2btildMax,Para.u2btildGridSize);
 
@@ -46,7 +46,7 @@ end
 
 % R=u_2/u_1 = c1/c2
 RMin=max(Rbar)*1.05;
-RMax=max(Rbar)*2;
+RMax=max(Rbar)*2.5;
 
 RGrid=linspace(RMin,RMax,Para.RGridSize);
 
@@ -60,8 +60,8 @@ Para.RMax=RMax;
 RMin=min(RGrid);
 Para.RMin=RMin;
 
-alpha1GridSize=20;
-alpha1grid=linspace(0.1, 0.85,alpha1GridSize);
+alpha1GridSize=30;
+alpha1grid=linspace(0.2, 0.75,alpha1GridSize);
 tau1Target=.2;
 c10guess=1;
 c20guess=1/(RMax);
@@ -85,7 +85,17 @@ Para.alpha_2=alpha_2;
      c20guess=res.c20;
      l1(i)=res.l1;
      l2(i)=res.l2;
-  end
+     YSim(i) = theta_1*l1(i)+theta_2*l2(i);
+     ToverY(i) = res.Trans/YSim(i);
+     goverY(i) = g/YSim(i);
+     btild(i)=res.btild;
+end
+
+figure()
+plot(alpha1grid,btild,'k','LineWidth',2);
+xlabel('alpha_1')
+ylabel('btild')
+
 figure()
 subplot(1,2,1)
 plot(alpha1grid,l1,'k','LineWidth',2);
@@ -99,19 +109,34 @@ xlabel('alpha_1')
 ylabel('l2')
 
 figure()
-subplot(2,1,1)
+subplot(2,2,1)
 plot(alpha1grid,tau1,'k','LineWidth',2);
 hold on
 plot(alpha1grid,tau1Target*ones(alpha1GridSize,1),':k','LineWidth',2);
 xlabel('alpha_1')
 ylabel('Labor Tax')
 
-subplot(2,1,2)
+subplot(2,2,2)
 plot(alpha1grid,AvgFrishElasticity,'k','LineWidth',2);
 hold on
 plot(alpha1grid,AvfFETarget*ones(alpha1GridSize,1),':k','LineWidth',2);
 xlabel('alpha_1')
 ylabel('Avg Frisch Elasticity')
+
+subplot(2,2,3)
+plot(alpha1grid,ToverY,'k','LineWidth',2);
+hold on
+plot(alpha1grid,.08*ones(alpha1GridSize,1),':k','LineWidth',2);
+xlabel('alpha_1')
+ylabel('Transfers proportion of GDP')
+
+subplot(2,2,4)
+plot(alpha1grid,goverY,'k','LineWidth',2);
+hold on
+plot(alpha1grid,.12*ones(alpha1GridSize,1),':k','LineWidth',2);
+xlabel('alpha_1')
+ylabel('Government proportion of GDP')
+
 
 print(gcf,'-depsc2 ',[plotpath 'CalibrationFE.eps'])
 print(gcf,'-dpng ',[plotpath 'CalibrationFE.png'])

@@ -19,6 +19,16 @@ T=100;
 %SimTitle = {'Benchmark Simulation','Different Pareto Weights Simulation','Mean Preserving Spread in g Simulation', 'Increased Inequality Simulation'};
 
 
+
+% -- FrishElaticity ----------------------------------------------------------
+X.data=(Para.n1*(1./l1Hist-1)+Para.n2*(1./l2Hist-1))/(Para.n1+Para.n2);
+X.sHist=sHist;
+X.ylabel='FE';
+X.name ='FrishElaticity';
+PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist,plotpath,texpath)
+
+
+
 % -- GDP ----------------------------------------------------------
 X.data=YHist;
 X.sHist=sHist;
@@ -74,11 +84,22 @@ X.name ='AfterTaxWageIncomeAgent2';
 PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist,plotpath,texpath)
 
 % -- IncomeFromAssetsAgent1 ----------------------------------------------------------
-X.data=IncomeFromAssets_Agent1Hist(1:end);
+X.data=IncomeFromAssets_Agent1Hist;
 X.sHist=sHist;
 X.ylabel='Asset Income';
 X.name ='IncomeFromAssetsAgent1';
 PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist(1:end-1,:),plotpath,texpath)
+
+
+% -- RtBt ----------------------------------------------------------
+X.data=-IncomeFromAssets_Agent1Hist+btildHist(1:end-1,:);
+X.sHist=sHist;
+X.ylabel='RtBt';
+X.name ='RtBt';
+PlotSimulationCommonshockAlt( X,T,SimTitle,K,gHist(1:end-1,:),plotpath,texpath)
+
+
+
 
 % -- Int Rates ----------------------------------------------------------
 X.data=IntHist;

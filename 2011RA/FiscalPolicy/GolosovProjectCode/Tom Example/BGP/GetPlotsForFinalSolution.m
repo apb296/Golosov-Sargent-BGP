@@ -1,13 +1,19 @@
 % CAPTION : fig:flagPoints - This plots the sucess of the optimizer to
 % solve the FOC at the points selected in the state space for the final set of coeffecients. The red points
 % denote failure.
-function GetPlotsForFinalSolution(Para)
+function GetPlotsForFinalSolution(Para,plotpath,Domain)
 load([Para.datapath Para.StoreFileName])
+disp('Computing alpha1 ,alpha 2')
+Para
+[Para.alpha_1 Para.alpha_2]
 close all;
 olddatapath=Para.datapath;
 oldtexpath=Para.texpath;
 oldplotpath=Para.plotpath;
+if nargin==1
 plotpath='Graphs/Calibration/temp/';
+end
+mkdir(plotpath);
 datapath='Data/Calibration/';
 disp('Govt Exp')
 g=Para.g
@@ -47,9 +53,14 @@ print(gcf,'-dpng',[plotpath 'CoeffConvergence.png'])
 
 u2btildLL=Para.u2btildMin;
 u2btildUL=Para.u2btildMax;
+if nargin==3
+ucbtild_bounds = Domain.xBounds;
+Rbounds=Domain.RBounds;
+else
+    
 ucbtild_bounds = [u2btildLL,u2btildUL];
 Rbounds=[min(Para.RGrid),max(Para.RGrid)];
-
+end
 %Caption : fig:FunctionalConvergence - This figure plots the value function
 % with respect to $\tilde{b}_2$ across iterations. The four panels refer to
 % vaules of R. The red line is the first iteration
@@ -160,8 +171,10 @@ figu2BtildePrime =figure('Name','x');
 figBtildePrime =figure('Name','btild');
 figRprime=figure('Name','R');
 figFOCRes =figure('Name','FOCRes');
-u2bdiffFineGrid=linspace(min(Para.u2bdiffGrid),max(Para.u2bdiffGrid),35);
-RList=linspace(min(Para.RGrid),max(Para.RGrid),4);
+figConsAgent2 =figure('Name','c2');
+figDeltaBtildPrime=figure('Name','Deltabtildprime')
+u2bdiffFineGrid=linspace(ucbtild_bounds(1),ucbtild_bounds(2),35);
+RList=linspace(Rbounds(1),Rbounds(2),4);
 s_=1;
 for Rctr=1:4
     for u2btildctr=1:length(u2bdiffFineGrid)
@@ -178,7 +191,9 @@ for Rctr=1:4
         FOCRes(u2btildctr)=max(abs(fvec));
         u2BtildePrime(u2btildctr,:)=PolicyRules(end-1:end);
         BtildePrime(u2btildctr,:)=PolicyRules(end-5:end-4);
+        DeltaBtildePrime(u2btildctr)=BtildePrime(u2btildctr,2)-BtildePrime(u2btildctr,1);
         Rprime(u2btildctr,:)=PolicyRules(end-3:end-2);
+        c2(u2btildctr,:)=PolicyRules(3:4);
     end
     
     figure(figFOCRes)
@@ -235,11 +250,34 @@ for Rctr=1:4
     xlabel('$x$','Interpreter','Latex')
     ylabel('$R^{*}$','Interpreter','Latex')
     title(['$R=$' num2str(RList(Rctr))])
+    
+    
+    figure(figConsAgent2)
+    subplot(2,2,Rctr)
+    plot(u2bdiffFineGrid(logical(IndxPrint)), c2(logical(IndxPrint),1),'k');
+    hold on
+    plot(u2bdiffFineGrid(logical(IndxPrint)), c2(logical(IndxPrint),2),':k');
+    xlabel('$x$','Interpreter','Latex')
+    ylabel('$c2(s)$','Interpreter','Latex')
+    title(['$R=$' num2str(RList(Rctr))])
+
+    
+    figure(figDeltaBtildPrime)
+    subplot(2,2,Rctr)
+    plot(u2bdiffFineGrid(logical(IndxPrint)), DeltaBtildePrime(logical(IndxPrint)),'k');
+    xlabel('$x$','Interpreter','Latex')
+    ylabel('DetlaBtildPrime','Interpreter','Latex')
+    title(['$R=$' num2str(RList(Rctr))])
+    
+    
+    
 end
-print(figFOCRes,'-dpng',[plotpath 'FOCResFullDomain.png'])
-print(figu2BtildePrime,'-dpng',[plotpath 'u2BtildePrimeFullDomain.png'])
-print(figBtildePrime,'-dpng',[plotpath 'BtildePrimeFullDomain.png'])
-print(figRprime,'-dpng',[plotpath 'RPrimeFullDomain.png'])
+print(figFOCRes,'-dpng',[plotpath 'FOCRes.png'])
+print(figDeltaBtildPrime,'-dpng',[plotpath 'DeltaBtildePrime.png'])
+print(figConsAgent2,'-dpng',[plotpath 'ConsAgent2.png'])
+print(figu2BtildePrime,'-dpng',[plotpath 'u2BtildePrime.png'])
+print(figBtildePrime,'-dpng',[plotpath 'BtildePrime.png'])
+print(figRprime,'-dpng',[plotpath 'RPrime.png'])
 
 
 
