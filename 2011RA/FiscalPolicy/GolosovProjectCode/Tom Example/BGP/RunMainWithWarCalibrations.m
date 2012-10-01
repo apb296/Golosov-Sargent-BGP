@@ -68,7 +68,7 @@ CoeffFileName=[Para.datapath Para.StoreFileName];
  % test run 
  Para.Niter=250;
 RGrid.RMin=2.5;
-RGrid.RMax=3.5;
+RGrid.RMax=3;
 MainBellman(Para,RGrid) 
 
 
@@ -105,11 +105,14 @@ for ctrb=1:K
 CoeffFileName=['Data/Calibration/War/c' ex(ctrb).casename '.mat'];
 Sol=load(CoeffFileName);
 Param(ctrb)=Sol.Para;
+c10guess=1;
+c20guess=1/Param(ctrb).RMax;
 end
 
 parfor ctrb=1:K
   CoeffFileName=['Data/Calibration/War/c' ex(ctrb).casename '.mat'];
-
+c10guess=1;
+c20guess=1/Param(ctrb).RMax;
 [sHist(:,ctrb),gHist(:,ctrb),u2btildHist(:,ctrb),RHist(:,ctrb),...
 TauHist(:,ctrb),YHist(:,ctrb),TransHist(:,ctrb),btildHist(:,ctrb),...
 c1Hist(:,ctrb),c2Hist(:,ctrb),l1Hist(:,ctrb),l2Hist(:,ctrb),...
@@ -117,7 +120,7 @@ IntHist(:,ctrb),IncomeFromAssets_Agent1Hist(:,ctrb),...
 AfterTaxWageIncome_Agent1Hist(:,ctrb),AfterTaxWageIncome_Agent2Hist(:,ctrb),...
 GShockDiffHist(:,ctrb),TransDiffHist(:,ctrb),LaborTaxAgent1DiffHist(:,ctrb),...
 LaborTaxAgent2DiffHist(:,ctrb),DebtDiffHist(:,ctrb),GiniCoeffHist(:,ctrb)]...
-=RunSimulations(CoeffFileName,0,NumSim,Param(ctrb),sHist0);
+=RunSimulations(CoeffFileName,0,c10guess,c20guess,NumSim,Param(ctrb),sHist0);
 end
 
 save( [Para.datapath 'SimDataParallelWar.mat'],'sHist',...

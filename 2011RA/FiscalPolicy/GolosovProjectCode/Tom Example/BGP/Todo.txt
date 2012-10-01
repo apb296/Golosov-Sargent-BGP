@@ -1,4 +1,0 @@
-This file keeps track of the steps to do in summer 2013 branch
-1. Homotopy type method for solving the problem - start from g_h-g_l small and then go to the desired value
-2. Use a dynamic grid on R. Basically make the grid denser on the points close to R_0_best given b_{-1}
-
